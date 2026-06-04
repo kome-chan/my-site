@@ -1,6 +1,8 @@
 import Link from "next/link";
 import HeroSlider from "@/components/HeroSlider";
+import NewsSection from "@/components/NewsSection";
 import { getNews } from "@/lib/news";
+import { getSchedule } from "@/lib/schedule";
 
 export const revalidate = 60;
 
@@ -35,24 +37,6 @@ const activities = [
     description:
       "学び続ける姿勢こそ経営の本質。研鑽の機会を通じて、個と組織の持続的な成長を支援します。",
     href: "/growth",
-  },
-];
-
-const schedule = [
-  {
-    date: "2026.07.12",
-    title: "第49回定例講演会",
-    note: "テーマ・会場は後日ご案内いたします",
-  },
-  {
-    date: "2026.09.06",
-    title: "秋季研究部会",
-    note: "生成AI時代の経営戦略をテーマに開催予定",
-  },
-  {
-    date: "2026.11.15",
-    title: "創立74周年記念懇親会",
-    note: "於・横浜市内（詳細は会員向けにご案内）",
   },
 ];
 
@@ -120,7 +104,9 @@ const focusRing =
   "focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 focus-visible:outline";
 
 export default async function Home() {
-  const news = (await getNews()).slice(0, 5);
+  // 日付の新しい順にソート(YYYY.MM.DD 形式は文字列比較で降順ソート可能)
+  const news = (await getNews()).sort((a, b) => b.date.localeCompare(a.date));
+  const schedule = await getSchedule();
 
   return (
     <>
@@ -363,54 +349,8 @@ export default async function Home() {
                     最新のお知らせ
                   </h2>
                 </div>
-                <a
-                  href="#"
-                  className={`inline-flex items-center gap-3 text-sm tracking-[0.2em] text-foreground/70 transition-colors hover:text-accent ${focusRing}`}
-                >
-                  一覧を見る
-                  <span aria-hidden="true">→</span>
-                </a>
               </div>
-              <ul className="divide-y divide-black/10 border-y border-black/10">
-                {news.map((item) =>
-                  item.link ? (
-                    // link あり → 外部リンクとして開く
-                    <li key={item.title}>
-                      <a
-                        href={item.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`grid gap-3 py-8 transition-colors hover:text-accent md:grid-cols-[140px_120px_1fr] md:items-center md:gap-8 ${focusRing}`}
-                      >
-                        <time className="text-sm tracking-widest text-foreground/60">
-                          {item.date}
-                        </time>
-                        <span className="inline-block w-fit border border-accent/50 px-3 py-1 text-xs tracking-widest text-accent">
-                          {item.category}
-                        </span>
-                        <p className="font-serif text-base leading-relaxed sm:text-lg">
-                          {item.title}
-                        </p>
-                      </a>
-                    </li>
-                  ) : (
-                    // link なし → クリック不可
-                    <li key={item.title}>
-                      <div className="grid gap-3 py-8 md:grid-cols-[140px_120px_1fr] md:items-center md:gap-8">
-                        <time className="text-sm tracking-widest text-foreground/60">
-                          {item.date}
-                        </time>
-                        <span className="inline-block w-fit border border-accent/50 px-3 py-1 text-xs tracking-widest text-accent">
-                          {item.category}
-                        </span>
-                        <p className="font-serif text-base leading-relaxed sm:text-lg">
-                          {item.title}
-                        </p>
-                      </div>
-                    </li>
-                  )
-                )}
-              </ul>
+              <NewsSection news={news} />
             </div>
           </section>
 
@@ -433,19 +373,40 @@ export default async function Home() {
               <ul className="divide-y divide-black/10 border-y border-black/10">
                 {schedule.map((item) => (
                   <li key={item.title}>
-                    <div className="grid gap-3 py-8 md:grid-cols-[140px_1fr] md:items-start md:gap-8">
-                      <time className="text-sm tracking-widest text-foreground/60">
-                        {item.date}
-                      </time>
-                      <div className="flex flex-col gap-1">
-                        <p className="font-serif text-base leading-relaxed text-foreground sm:text-lg">
-                          {item.title}
-                        </p>
-                        <p className="text-sm leading-loose text-foreground/60">
-                          {item.note}
-                        </p>
+                    {item.link ? (
+                      <a
+                        href={item.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`group grid gap-3 py-8 md:grid-cols-[140px_1fr] md:items-start md:gap-8 ${focusRing}`}
+                      >
+                        <time className="text-sm tracking-widest text-foreground/60">
+                          {item.date}
+                        </time>
+                        <div className="flex flex-col gap-1">
+                          <p className="font-serif text-base leading-relaxed text-foreground underline-offset-4 decoration-accent/60 group-hover:underline sm:text-lg">
+                            {item.title}
+                          </p>
+                          <p className="text-sm leading-loose text-foreground/60">
+                            {item.note}
+                          </p>
+                        </div>
+                      </a>
+                    ) : (
+                      <div className="grid gap-3 py-8 md:grid-cols-[140px_1fr] md:items-start md:gap-8">
+                        <time className="text-sm tracking-widest text-foreground/60">
+                          {item.date}
+                        </time>
+                        <div className="flex flex-col gap-1">
+                          <p className="font-serif text-base leading-relaxed text-foreground sm:text-lg">
+                            {item.title}
+                          </p>
+                          <p className="text-sm leading-loose text-foreground/60">
+                            {item.note}
+                          </p>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -592,12 +553,78 @@ export default async function Home() {
           </section>
         </main>
 
-        <footer>
-          <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6 py-10 text-xs tracking-widest text-foreground/60 sm:flex-row sm:items-center sm:justify-between lg:px-12">
-            <p className="font-serif text-sm tracking-[0.2em] text-foreground/80">
-              <span className="text-accent">横浜国立</span>大学経営者会
-            </p>
-            <p>© 2025 横浜国立大学経営者会  All Rights Reserved.</p>
+        <footer className="border-t border-black/10">
+          {/* ① リンク集 */}
+          <div className="mx-auto w-full max-w-7xl px-6 py-16 lg:px-12 lg:py-20">
+            <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-16">
+              {/* カラム1: コンテンツ */}
+              <div>
+                <p className="mb-4 border-b border-black/10 pb-3 text-xs tracking-[0.3em] text-accent">
+                  CONTENTS
+                </p>
+                <ul className="space-y-3 text-sm tracking-wider text-foreground/60">
+                  {[
+                    { label: "和田町会について", href: "#about" },
+                    { label: "活動内容", href: "#activities" },
+                    { label: "会員紹介", href: "#members" },
+                  ].map((link) => (
+                    <li key={link.href}>
+                      <a href={link.href} className={`transition-colors hover:text-accent ${focusRing}`}>
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* カラム2: お知らせ・予定 */}
+              <div>
+                <p className="mb-4 border-b border-black/10 pb-3 text-xs tracking-[0.3em] text-accent">
+                  NEWS &amp; SCHEDULE
+                </p>
+                <ul className="space-y-3 text-sm tracking-wider text-foreground/60">
+                  {[
+                    { label: "最新のお知らせ", href: "#news" },
+                    { label: "今後の予定", href: "#schedule" },
+                  ].map((link) => (
+                    <li key={link.href}>
+                      <a href={link.href} className={`transition-colors hover:text-accent ${focusRing}`}>
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* カラム3: 入会・SNS */}
+              <div>
+                <p className="mb-4 border-b border-black/10 pb-3 text-xs tracking-[0.3em] text-accent">
+                  JOIN &amp; SNS
+                </p>
+                <ul className="space-y-3 text-sm tracking-wider text-foreground/60">
+                  {[
+                    { label: "入会案内", href: "#join" },
+                    { label: "公式SNS", href: "#sns" },
+                  ].map((link) => (
+                    <li key={link.href}>
+                      <a href={link.href} className={`transition-colors hover:text-accent ${focusRing}`}>
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* ② 下部: 基本情報 */}
+          <div className="border-t border-black/10">
+            <div className="mx-auto flex w-full max-w-7xl flex-col gap-3 px-6 py-8 text-xs tracking-widest text-foreground/50 sm:flex-row sm:items-center sm:justify-between lg:px-12">
+              <p className="font-serif text-sm tracking-[0.2em] text-foreground/70">
+                横浜国立大学経営者会 <span className="text-accent">和田町会</span>
+              </p>
+              <p>© 2025 横浜国立大学経営者会 All Rights Reserved.</p>
+            </div>
           </div>
         </footer>
       </div>
