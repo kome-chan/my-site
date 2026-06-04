@@ -1,45 +1,36 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
-const heroImages = [
-  "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1920",
-  "https://images.unsplash.com/photo-1560523159-6b681a1e1852?w=1920",
-  "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=1920",
-];
-
-const heroImageAlts = [
-  "大学キャンパスの卒業式・学術的な場の様子",
-  "ビジネスリーダーたちの交流・ネットワーキングの様子",
-  "経営者・研究者が集うカンファレンスの様子",
-];
+import type { SlideItem } from "@/lib/slider";
 
 const focusRing =
   "focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 focus-visible:outline";
 
-export default function HeroSlider() {
+export default function HeroSlider({ slides }: { slides: SlideItem[] }) {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const multiple = slides.length > 1;
 
   useEffect(() => {
+    if (!multiple) return;
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [slides.length, multiple]);
 
   return (
     <section aria-label="ヒーロー" className="relative h-screen overflow-hidden">
       {/* Image slider */}
       <div className="absolute inset-0 z-0">
-        {heroImages.map((src, index) => (
+        {slides.map((slide, index) => (
           <div
-            key={src}
+            key={slide.slug}
             className="absolute inset-0 transition-opacity duration-1000"
             style={{ opacity: index === currentSlide ? 1 : 0 }}
           >
             <img
-              src={src}
-              alt={heroImageAlts[index]}
+              src={slide.image}
+              alt={slide.alt}
               className="h-full w-full object-cover"
             />
           </div>
@@ -79,26 +70,28 @@ export default function HeroSlider() {
         </div>
       </div>
 
-      {/* Dot navigation */}
-      <div
-        role="group"
-        aria-label="スライドナビゲーション"
-        className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 gap-2"
-      >
-        {heroImages.map((_, index) => (
-          <button
-            key={index}
-            aria-label={`スライド ${index + 1}${index === currentSlide ? "（現在表示中）" : ""}`}
-            aria-pressed={index === currentSlide}
-            onClick={() => setCurrentSlide(index)}
-            className={`h-2 w-2 rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 ${
-              index === currentSlide
-                ? "bg-accent scale-125"
-                : "bg-white/50 hover:bg-white/80"
-            }`}
-          />
-        ))}
-      </div>
+      {/* Dot navigation (2枚以上のときのみ表示) */}
+      {multiple && (
+        <div
+          role="group"
+          aria-label="スライドナビゲーション"
+          className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 gap-2"
+        >
+          {slides.map((slide, index) => (
+            <button
+              key={slide.slug}
+              aria-label={`スライド ${index + 1}${index === currentSlide ? "（現在表示中）" : ""}`}
+              aria-pressed={index === currentSlide}
+              onClick={() => setCurrentSlide(index)}
+              className={`h-2 w-2 rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 ${
+                index === currentSlide
+                  ? "bg-accent scale-125"
+                  : "bg-white/50 hover:bg-white/80"
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

@@ -14,6 +14,16 @@ slug:
   sanitize_replacement: "-"
 
 collections:
+  - name: "slider"
+    label: "ヒーロー画像スライダー"
+    folder: "content/slider"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{random}}"
+    fields:
+      - { label: "表示順", name: "order", widget: "number", default: 1, min: 1, hint: "数字が小さい順に表示されます" }
+      - { label: "画像", name: "image", widget: "image", required: true }
+      - { label: "代替テキスト(alt)", name: "alt", widget: "string", required: false, hint: "画像の説明文。アクセシビリティのため推奨" }
+
   - name: "news"
     label: "お知らせ"
     folder: "content/news"

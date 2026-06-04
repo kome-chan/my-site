@@ -4,6 +4,7 @@ import HeroSlider from "@/components/HeroSlider";
 import NewsSection from "@/components/NewsSection";
 import { getNews } from "@/lib/news";
 import { getSchedule } from "@/lib/schedule";
+import { getSlides } from "@/lib/slider";
 
 export const revalidate = 60;
 
@@ -98,6 +99,7 @@ export default async function Home() {
   // 日付の新しい順にソート(YYYY.MM.DD 形式は文字列比較で降順ソート可能)
   const news = (await getNews()).sort((a, b) => b.date.localeCompare(a.date));
   const schedule = await getSchedule();
+  const slides = await getSlides();
 
   return (
     <>
@@ -114,7 +116,7 @@ export default async function Home() {
 
         <main id="main-content" className="flex flex-1 flex-col">
           {/* HERO — Client Component (スライダー) */}
-          <HeroSlider />
+          <HeroSlider slides={slides} />
 
           {/* ABOUT */}
           <section id="about" aria-labelledby="about-heading">
