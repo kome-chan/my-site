@@ -1,19 +1,8 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import Link from "next/link";
+import HeroSlider from "@/components/HeroSlider";
+import { getNews } from "@/lib/news";
 
-const heroImages = [
-  "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1920",
-  "https://images.unsplash.com/photo-1560523159-6b681a1e1852?w=1920",
-  "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=1920",
-];
-
-const heroImageAlts = [
-  "大学キャンパスの卒業式・学術的な場の様子",
-  "ビジネスリーダーたちの交流・ネットワーキングの様子",
-  "経営者・研究者が集うカンファレンスの様子",
-];
+export const revalidate = 60;
 
 const navItems = [
   { label: "和田町会について", href: "#about" },
@@ -46,19 +35,6 @@ const activities = [
     description:
       "学び続ける姿勢こそ経営の本質。研鑽の機会を通じて、個と組織の持続的な成長を支援します。",
     href: "/growth",
-  },
-];
-
-const news = [
-  {
-    date: "2026.05.12",
-    category: "イベント",
-    title: "第48回定例講演会「これからの企業統治と長期的価値創造」開催のお知らせ",
-  },
-  {
-    date: "2026.04.20",
-    category: "お知らせ",
-    title: "2026年度通常総会・懇親会の開催および新役員選任に関するご報告",
   },
 ];
 
@@ -143,19 +119,12 @@ const members: Member[] = [
 const focusRing =
   "focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 focus-visible:outline";
 
-export default function Home() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroImages.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
+export default async function Home() {
+  const news = (await getNews()).slice(0, 5);
 
   return (
     <>
-      {/* ⑤ スキップリンク: 通常は非表示、Tab キーで表示 */}
+      {/* スキップリンク: 通常は非表示、Tab キーで表示 */}
       <a
         href="#main-content"
         className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:left-4 focus-visible:top-4 focus-visible:z-[100] focus-visible:bg-background focus-visible:px-4 focus-visible:py-2 focus-visible:text-sm focus-visible:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
@@ -165,12 +134,10 @@ export default function Home() {
 
       <div className="flex flex-col flex-1">
         <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md">
-          {/* ④ nav に aria-label でランドマークを明示 */}
           <nav
             aria-label="メインナビゲーション"
             className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-5 lg:px-12"
           >
-            {/* ① ロゴ alt を詳細に */}
             <a href="/" className={`flex items-center gap-3 ${focusRing}`}>
               <img
                 src="/和田町会_ロゴ.JPG"
@@ -184,7 +151,6 @@ export default function Home() {
             <ul className="hidden items-center gap-6 text-sm tracking-wider text-foreground/80 md:flex">
               {navItems.map((item) => (
                 <li key={item.href}>
-                  {/* ② nav リンクにフォーカスリング */}
                   <a
                     href={item.href}
                     className={`transition-colors hover:text-accent ${focusRing}`}
@@ -195,7 +161,6 @@ export default function Home() {
               ))}
             </ul>
             <div className="hidden items-center gap-4 md:flex">
-              {/* ② ヘッダー SNS アイコンにフォーカスリング */}
               <a
                 href="#"
                 target="_blank"
@@ -228,81 +193,9 @@ export default function Home() {
           </nav>
         </header>
 
-        {/* ④ main に id を付与してスキップリンクの飛び先に */}
         <main id="main-content" className="flex flex-1 flex-col">
-          {/* HERO */}
-          <section aria-label="ヒーロー" className="relative h-screen overflow-hidden">
-            {/* ① スライダー画像に説明的 alt を設定 */}
-            <div className="absolute inset-0 z-0">
-              {heroImages.map((src, index) => (
-                <div
-                  key={src}
-                  className="absolute inset-0 transition-opacity duration-1000"
-                  style={{ opacity: index === currentSlide ? 1 : 0 }}
-                >
-                  <img
-                    src={src}
-                    alt={heroImageAlts[index]}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              ))}
-              <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
-            </div>
-
-            <div className="relative z-10 mx-auto flex h-full w-full max-w-7xl flex-col justify-center px-6 lg:px-12">
-              <p className="mb-8 flex items-center gap-4 text-xs tracking-[0.4em] text-accent">
-                <span className="inline-block h-px w-10 bg-accent" aria-hidden="true" />
-                SINCE 1952
-              </p>
-              <h1 className="font-serif text-4xl font-medium leading-[1.3] text-white sm:text-5xl lg:text-6xl lg:leading-[1.25]">
-                知を磨き、
-                <br />
-                次代の経営を拓く。
-              </h1>
-              <p className="mt-10 max-w-2xl text-base leading-loose text-white/70 sm:text-lg">
-                横浜国立大学経営者会は、卒業生有志により設立された経営者・実務家のための学びと交流の場です。
-                半世紀以上にわたり、経営の知見を深め合い、社会への責任を果たす人材を輩出してきました。
-              </p>
-              {/* ② CTA ボタンにフォーカスリング */}
-              <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:items-center">
-                <a
-                  href="#join"
-                  className={`inline-flex items-center justify-center gap-3 bg-accent px-10 py-4 text-sm tracking-[0.2em] text-background transition-colors hover:bg-accent/90 ${focusRing}`}
-                >
-                  入会案内を見る
-                  <span aria-hidden="true">→</span>
-                </a>
-                <a
-                  href="#about"
-                  className={`inline-flex items-center justify-center gap-3 border border-white/40 px-10 py-4 text-sm tracking-[0.2em] text-white transition-colors hover:border-accent hover:text-accent ${focusRing}`}
-                >
-                  和田町会について
-                </a>
-              </div>
-            </div>
-
-            {/* ② スライドドットにフォーカスリング・現在地表示 */}
-            <div
-              role="group"
-              aria-label="スライドナビゲーション"
-              className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 gap-2"
-            >
-              {heroImages.map((_, index) => (
-                <button
-                  key={index}
-                  aria-label={`スライド ${index + 1}${index === currentSlide ? "（現在表示中）" : ""}`}
-                  aria-pressed={index === currentSlide}
-                  onClick={() => setCurrentSlide(index)}
-                  className={`h-2 w-2 rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 ${
-                    index === currentSlide
-                      ? "bg-accent scale-125"
-                      : "bg-white/50 hover:bg-white/80"
-                  }`}
-                />
-              ))}
-            </div>
-          </section>
+          {/* HERO — Client Component (スライダー) */}
+          <HeroSlider />
 
           {/* ABOUT */}
           <section id="about" aria-labelledby="about-heading">
@@ -401,7 +294,6 @@ export default function Home() {
                   </blockquote>
                   <div className="mt-2 border-t border-black/10 pt-4">
                     <p className="font-serif text-base text-foreground">山田 太郎</p>
-                    {/* ③ 役職情報は読みやすさのため /60 に */}
                     <p className="mt-1 text-xs tracking-widest text-foreground/60">
                       第18代 会長 / 1985年経営学部卒
                     </p>
@@ -430,7 +322,6 @@ export default function Home() {
               <ul className="grid gap-6 md:grid-cols-3 md:gap-8">
                 {activities.map((item, index) => (
                   <li key={item.title}>
-                    {/* ② Link にフォーカスリング */}
                     <Link
                       href={item.href}
                       className={`group relative flex flex-col gap-6 border border-black/10 bg-surface/40 p-8 transition-all duration-300 hover:border-accent/50 hover:scale-105 cursor-pointer lg:p-10 ${focusRing}`}
@@ -460,7 +351,7 @@ export default function Home() {
             </div>
           </section>
 
-          {/* NEWS */}
+          {/* NEWS — Googleスプレッドシートから取得 */}
           <section id="news" aria-labelledby="news-heading">
             <div className="mx-auto w-full max-w-7xl px-6 py-24 lg:px-12 lg:py-32">
               <div className="mb-12 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -472,7 +363,6 @@ export default function Home() {
                     最新のお知らせ
                   </h2>
                 </div>
-                {/* ② 一覧リンクにフォーカスリング */}
                 <a
                   href="#"
                   className={`inline-flex items-center gap-3 text-sm tracking-[0.2em] text-foreground/70 transition-colors hover:text-accent ${focusRing}`}
@@ -482,25 +372,44 @@ export default function Home() {
                 </a>
               </div>
               <ul className="divide-y divide-black/10 border-y border-black/10">
-                {news.map((item) => (
-                  <li key={item.title}>
-                    {/* ② ニュースリンクにフォーカスリング */}
-                    <a
-                      href="#"
-                      className={`grid gap-3 py-8 transition-colors hover:text-accent md:grid-cols-[140px_120px_1fr] md:items-center md:gap-8 ${focusRing}`}
-                    >
-                      <time className="text-sm tracking-widest text-foreground/60">
-                        {item.date}
-                      </time>
-                      <span className="inline-block w-fit border border-accent/50 px-3 py-1 text-xs tracking-widest text-accent">
-                        {item.category}
-                      </span>
-                      <p className="font-serif text-base leading-relaxed sm:text-lg">
-                        {item.title}
-                      </p>
-                    </a>
-                  </li>
-                ))}
+                {news.map((item) =>
+                  item.link ? (
+                    // link あり → 外部リンクとして開く
+                    <li key={item.title}>
+                      <a
+                        href={item.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`grid gap-3 py-8 transition-colors hover:text-accent md:grid-cols-[140px_120px_1fr] md:items-center md:gap-8 ${focusRing}`}
+                      >
+                        <time className="text-sm tracking-widest text-foreground/60">
+                          {item.date}
+                        </time>
+                        <span className="inline-block w-fit border border-accent/50 px-3 py-1 text-xs tracking-widest text-accent">
+                          {item.category}
+                        </span>
+                        <p className="font-serif text-base leading-relaxed sm:text-lg">
+                          {item.title}
+                        </p>
+                      </a>
+                    </li>
+                  ) : (
+                    // link なし → クリック不可
+                    <li key={item.title}>
+                      <div className="grid gap-3 py-8 md:grid-cols-[140px_120px_1fr] md:items-center md:gap-8">
+                        <time className="text-sm tracking-widest text-foreground/60">
+                          {item.date}
+                        </time>
+                        <span className="inline-block w-fit border border-accent/50 px-3 py-1 text-xs tracking-widest text-accent">
+                          {item.category}
+                        </span>
+                        <p className="font-serif text-base leading-relaxed sm:text-lg">
+                          {item.title}
+                        </p>
+                      </div>
+                    </li>
+                  )
+                )}
               </ul>
             </div>
           </section>
@@ -532,7 +441,6 @@ export default function Home() {
                         <p className="font-serif text-base leading-relaxed text-foreground sm:text-lg">
                           {item.title}
                         </p>
-                        {/* ③ 補足情報のコントラストを /50 → /60 に改善 */}
                         <p className="text-sm leading-loose text-foreground/60">
                           {item.note}
                         </p>
@@ -569,7 +477,6 @@ export default function Home() {
                           <span className="font-serif text-xs tracking-[0.3em] text-accent">
                             {String(index + 1).padStart(2, "0")}
                           </span>
-                          {/* ③ 卒業年情報のコントラストを /40 → /60 に改善 */}
                           <span className="text-xs tracking-[0.3em] text-foreground/60">
                             {member.year}
                           </span>
@@ -578,14 +485,12 @@ export default function Home() {
                           <p className="font-serif text-2xl font-medium text-foreground">
                             {member.name}
                           </p>
-                          {/* ③ 役職情報のコントラストを /50 → /60 に改善 */}
                           <p className="text-xs tracking-wider text-foreground/60">
                             {member.role}
                           </p>
                         </div>
                         <div className="flex flex-col gap-3 border-t border-black/10 pt-4">
                           {member.companyUrl ? (
-                            /* ② 企業リンクにフォーカスリング */
                             <a
                               href={member.companyUrl}
                               target="_blank"
@@ -605,7 +510,6 @@ export default function Home() {
                             <ul className="flex flex-wrap gap-2">
                               {member.sns.map((link) => (
                                 <li key={link.label}>
-                                  {/* ② SNS リンクにフォーカスリング */}
                                   <a
                                     href={link.href}
                                     target="_blank"
@@ -640,7 +544,6 @@ export default function Home() {
               <p className="mx-auto mt-8 max-w-xl text-sm leading-loose text-foreground/70 sm:text-base">
                 入会を希望される方、活動にご関心をお持ちの方は、下記より入会案内をご請求ください。
               </p>
-              {/* ② JOIN ボタンにフォーカスリング */}
               <a
                 href="#"
                 className={`mt-12 inline-flex items-center justify-center gap-3 bg-accent px-12 py-4 text-sm tracking-[0.2em] text-background transition-colors hover:bg-accent/90 ${focusRing}`}
@@ -662,7 +565,6 @@ export default function Home() {
                 最新の活動情報や講演会のお知らせを発信しています。
               </p>
               <div className="mt-12 flex items-center justify-center gap-8">
-                {/* ② SNS アイコンにフォーカスリング */}
                 <a
                   href="#"
                   target="_blank"
@@ -691,7 +593,6 @@ export default function Home() {
         </main>
 
         <footer>
-          {/* ③ フッターテキストのコントラストを /50 → /60 に改善 */}
           <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6 py-10 text-xs tracking-widest text-foreground/60 sm:flex-row sm:items-center sm:justify-between lg:px-12">
             <p className="font-serif text-sm tracking-[0.2em] text-foreground/80">
               <span className="text-accent">横浜国立</span>大学経営者会
