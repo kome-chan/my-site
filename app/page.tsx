@@ -1,20 +1,11 @@
 import Link from "next/link";
+import Header from "@/components/Header";
 import HeroSlider from "@/components/HeroSlider";
 import NewsSection from "@/components/NewsSection";
 import { getNews } from "@/lib/news";
 import { getSchedule } from "@/lib/schedule";
 
 export const revalidate = 60;
-
-const navItems = [
-  { label: "和田町会について", href: "#about" },
-  { label: "活動内容", href: "#activities" },
-  { label: "お知らせ", href: "#news" },
-  { label: "今後の予定", href: "#schedule" },
-  { label: "会員紹介", href: "#members" },
-  { label: "入会案内", href: "#join" },
-  { label: "SNS", href: "#sns" },
-];
 
 const activities = [
   {
@@ -119,65 +110,7 @@ export default async function Home() {
       </a>
 
       <div className="flex flex-col flex-1">
-        <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md">
-          <nav
-            aria-label="メインナビゲーション"
-            className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-5 lg:px-12"
-          >
-            <a href="/" className={`flex items-center gap-3 ${focusRing}`}>
-              <img
-                src="/和田町会_ロゴ.JPG"
-                alt="横浜国立大学 和田町会 ロゴ"
-                className="h-10 w-auto"
-              />
-              <span className="font-serif text-base tracking-[0.2em] text-foreground sm:text-lg">
-                <span className="text-accent">和田町会横浜国大経営者会</span>
-              </span>
-            </a>
-            <ul className="hidden items-center gap-6 text-sm tracking-wider text-foreground/80 md:flex">
-              {navItems.map((item) => (
-                <li key={item.href}>
-                  <a
-                    href={item.href}
-                    className={`transition-colors hover:text-accent ${focusRing}`}
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <div className="hidden items-center gap-4 md:flex">
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook（外部リンク）"
-                className={`text-foreground/40 transition-colors hover:text-accent ${focusRing}`}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.883v2.271h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z" />
-                </svg>
-              </a>
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="X / Twitter（外部リンク）"
-                className={`text-foreground/40 transition-colors hover:text-accent ${focusRing}`}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                </svg>
-              </a>
-              <a
-                href="#join"
-                className={`border border-accent/60 px-5 py-2 text-xs tracking-[0.2em] text-accent transition-colors hover:bg-accent hover:text-background ${focusRing}`}
-              >
-                JOIN US
-              </a>
-            </div>
-          </nav>
-        </header>
+        <Header />
 
         <main id="main-content" className="flex flex-1 flex-col">
           {/* HERO — Client Component (スライダー) */}
@@ -555,75 +488,46 @@ export default async function Home() {
 
         <footer className="border-t border-black/10">
           {/* ① リンク集 */}
-          <div className="mx-auto w-full max-w-7xl px-6 py-16 lg:px-12 lg:py-20">
-            <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-16">
-              {/* カラム1: コンテンツ */}
-              <div>
-                <p className="mb-4 border-b border-black/10 pb-3 text-xs tracking-[0.3em] text-accent">
-                  CONTENTS
-                </p>
-                <ul className="space-y-3 text-sm tracking-wider text-foreground/60">
+          <div className="mx-auto w-full max-w-7xl px-6 py-12 lg:px-12">
+            <div className="flex flex-col items-center gap-8 md:flex-row md:items-center md:justify-between">
+              {/* 縦2列リンク */}
+              <nav aria-label="フッターナビゲーション">
+                <ul className="grid grid-cols-2 gap-x-12 gap-y-3 text-sm tracking-wider text-foreground/60">
                   {[
                     { label: "和田町会について", href: "#about" },
-                    { label: "活動内容", href: "#activities" },
-                    { label: "会員紹介", href: "#members" },
-                  ].map((link) => (
-                    <li key={link.href}>
-                      <a href={link.href} className={`transition-colors hover:text-accent ${focusRing}`}>
-                        {link.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* カラム2: お知らせ・予定 */}
-              <div>
-                <p className="mb-4 border-b border-black/10 pb-3 text-xs tracking-[0.3em] text-accent">
-                  NEWS &amp; SCHEDULE
-                </p>
-                <ul className="space-y-3 text-sm tracking-wider text-foreground/60">
-                  {[
-                    { label: "最新のお知らせ", href: "#news" },
                     { label: "今後の予定", href: "#schedule" },
-                  ].map((link) => (
-                    <li key={link.href}>
-                      <a href={link.href} className={`transition-colors hover:text-accent ${focusRing}`}>
-                        {link.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* カラム3: 入会・SNS */}
-              <div>
-                <p className="mb-4 border-b border-black/10 pb-3 text-xs tracking-[0.3em] text-accent">
-                  JOIN &amp; SNS
-                </p>
-                <ul className="space-y-3 text-sm tracking-wider text-foreground/60">
-                  {[
+                    { label: "活動内容", href: "#activities" },
                     { label: "入会案内", href: "#join" },
+                    { label: "会員紹介", href: "#members" },
                     { label: "公式SNS", href: "#sns" },
+                    { label: "最新のお知らせ", href: "#news" },
                   ].map((link) => (
                     <li key={link.href}>
-                      <a href={link.href} className={`transition-colors hover:text-accent ${focusRing}`}>
+                      <a href={link.href} className={`whitespace-nowrap transition-colors hover:text-accent ${focusRing}`}>
                         {link.label}
                       </a>
                     </li>
                   ))}
                 </ul>
+              </nav>
+              {/* ロゴマーク */}
+              <div className="shrink-0">
+                <img
+                  src="/和田町会ロゴ＿マークのみ.png"
+                  alt="和田町会 ロゴマーク"
+                  className="h-20 w-auto"
+                />
               </div>
             </div>
           </div>
 
           {/* ② 下部: 基本情報 */}
           <div className="border-t border-black/10">
-            <div className="mx-auto flex w-full max-w-7xl flex-col gap-3 px-6 py-8 text-xs tracking-widest text-foreground/50 sm:flex-row sm:items-center sm:justify-between lg:px-12">
-              <p className="font-serif text-sm tracking-[0.2em] text-foreground/70">
+            <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-2 px-6 py-6 text-xs tracking-widest text-foreground/50 md:flex-row md:justify-between lg:px-12">
+              <p className="font-serif text-sm tracking-[0.2em] text-foreground/70 text-center md:text-left">
                 横浜国立大学経営者会 <span className="text-accent">和田町会</span>
               </p>
-              <p>© 2026 横浜国立大学経営者会 All Rights Reserved.</p>
+              <p className="text-center md:text-right">© 2026 横浜国立大学経営者会 All Rights Reserved.</p>
             </div>
           </div>
         </footer>

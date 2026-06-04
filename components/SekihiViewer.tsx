@@ -9,10 +9,21 @@ import * as THREE from "three";
 function PointCloud() {
   const geometry = useLoader(
     PLYLoader,
-    "/横国石碑.ply"
+    "/横国石碑_light.ply"
   ) as THREE.BufferGeometry;
 
   const hasColors = useMemo(() => {
+    // NaN/Infinity を 0 に置換
+    for (const name of ["position", "color", "normal"] as const) {
+      const attr = geometry.attributes[name];
+      if (!attr) continue;
+      const arr = attr.array as Float32Array;
+      for (let i = 0; i < arr.length; i++) {
+        if (!isFinite(arr[i])) arr[i] = 0;
+      }
+      attr.needsUpdate = true;
+    }
+
     geometry.computeBoundingBox();
     const box = geometry.boundingBox;
     if (box) {
