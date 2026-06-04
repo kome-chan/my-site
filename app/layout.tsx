@@ -20,6 +20,7 @@ export const metadata: Metadata = {
   title: "和田町会",
   description:
     "和田町会（横浜国立大学経営者会）は、経営の知見を深め、互いに高め合う卒業生・関係者のためのコミュニティです。",
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({

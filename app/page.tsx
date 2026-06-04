@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import SekihiViewer from "@/components/SekihiViewer";
 
 const heroImages = [
   "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1920",
@@ -12,7 +11,6 @@ const heroImages = [
 
 const navItems = [
   { label: "和田町会について", href: "#about" },
-  { label: "歴史", href: "#history" },
   { label: "活動内容", href: "#activities" },
   { label: "お知らせ", href: "#news" },
   { label: "今後の予定", href: "#schedule" },
@@ -372,23 +370,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* OUR HISTORY */}
-        <section id="history">
-          <div className="mx-auto w-full max-w-7xl px-6 py-24 lg:px-12 lg:py-32">
-            <div className="mb-16 flex flex-col gap-4 lg:mb-20">
-              <p className="text-xs tracking-[0.4em] text-accent">OUR HISTORY</p>
-              <h2 className="font-serif text-3xl font-medium leading-tight text-foreground sm:text-4xl">
-                私たちの歴史
-              </h2>
-              <p className="max-w-xl text-sm leading-loose text-foreground/60">
-                和田町会の歴史を物語る石碑。母校とともに歩んだ70年の歩みを今に伝えます。
-              </p>
-            </div>
-            <div className="h-[500px] w-full">
-              <SekihiViewer />
-            </div>
-          </div>
-        </section>
 
         {/* ACTIVITIES */}
         <section id="activities">
