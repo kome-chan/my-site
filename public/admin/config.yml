@@ -8,12 +8,17 @@ public_folder: "/images/uploads"
 
 locale: ja
 
+slug:
+  encoding: "ascii"
+  clean_accents: true
+  sanitize_replacement: "-"
+
 collections:
   - name: "news"
     label: "お知らせ"
     folder: "content/news"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{random}}"
+    slug: "{{year}}-{{month}}-{{day}}-{{hash}}"
     fields:
       - { label: "日付", name: "date", widget: "datetime" }
       - label: "カテゴリ"
@@ -28,7 +33,7 @@ collections:
     label: "今後の予定"
     folder: "content/schedule"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{random}}"
+    slug: "{{year}}-{{month}}-{{day}}-{{hash}}"
     fields:
       - { label: "日付", name: "date", widget: "datetime" }
       - { label: "イベント名", name: "title", widget: "string" }
