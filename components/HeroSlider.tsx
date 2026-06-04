@@ -118,50 +118,51 @@ export default function HeroSlider({ slides }: { slides: SlideItem[] }) {
         </div>
       </div>
 
-      {/* 左右矢印ボタン */}
-      {multiple && (
-        <>
-          <button
-            aria-label="前の画像へ"
-            onClick={prev}
-            className={`absolute left-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/30 text-white transition-colors hover:bg-white/50 sm:h-12 sm:w-12 ${focusRing}`}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-          </button>
-          <button
-            aria-label="次の画像へ"
-            onClick={next}
-            className={`absolute right-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/30 text-white transition-colors hover:bg-white/50 sm:h-12 sm:w-12 ${focusRing}`}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </button>
-        </>
-      )}
-
-      {/* ドットインジケーター */}
+      {/* 矢印 + ドットインジケーター */}
       {multiple && (
         <div
           role="group"
           aria-label="スライドナビゲーション"
-          className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2"
+          className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 items-center gap-4"
         >
-          {slides.map((slide, index) => (
-            <button
-              key={slide.slug}
-              aria-label={`画像${index + 1}へ`}
-              aria-pressed={index === current}
-              onClick={() => go(index)}
-              className={`h-2 rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 ${
-                index === current
-                  ? "w-6 bg-accent"
-                  : "w-2 bg-white/50 hover:bg-white/80"
-              }`}
-            />
-          ))}
+          {/* 前へ */}
+          <button
+            aria-label="前の画像へ"
+            onClick={prev}
+            className={`flex h-8 w-8 items-center justify-center rounded-full bg-white/30 text-white transition-colors hover:bg-white/50 ${focusRing}`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+
+          {/* ドット */}
+          <div className="flex items-center gap-2">
+            {slides.map((slide, index) => (
+              <button
+                key={slide.slug}
+                aria-label={`画像${index + 1}へ`}
+                aria-pressed={index === current}
+                onClick={() => go(index)}
+                className={`h-2 rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 ${
+                  index === current
+                    ? "w-6 bg-accent"
+                    : "w-2 bg-white/50 hover:bg-white/80"
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* 次へ */}
+          <button
+            aria-label="次の画像へ"
+            onClick={next}
+            className={`flex h-8 w-8 items-center justify-center rounded-full bg-white/30 text-white transition-colors hover:bg-white/50 ${focusRing}`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
         </div>
       )}
     </section>
