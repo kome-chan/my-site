@@ -1,27 +1,46 @@
-import Papa from "papaparse";
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
 
 export type NewsItem = {
+  slug: string;
   date: string;
   category: string;
   title: string;
-  link: string;
+  body: string;
+  thumbnail?: string;
+  link?: string;
 };
 
-const SHEET_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSVlnmHmIM9vtFuF1tUvUgRHpnP3W0tM-nyY-QJP9DUMhz-zlSiH5clUf-1lHrUw82lVLRpcMjFmIOX/pub?gid=0&single=true&output=csv";
+const CONTENT_DIR = path.join(process.cwd(), "content/news");
+
+function formatDate(raw: unknown): string {
+  if (!raw) return "";
+  const d = raw instanceof Date ? raw : new Date(String(raw));
+  if (isNaN(d.getTime())) return String(raw).slice(0, 10);
+  return d.toISOString().slice(0, 10);
+}
 
 export async function getNews(): Promise<NewsItem[]> {
-  try {
-    const res = await fetch(SHEET_URL, { next: { revalidate: 60 } });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const csv = await res.text();
-    const { data } = Papa.parse<NewsItem>(csv, {
-      header: true,
-      skipEmptyLines: true,
-    });
-    return data;
-  } catch (err) {
-    console.error("[getNews] fetch failed:", err);
-    return [];
-  }
+  if (!fs.existsSync(CONTENT_DIR)) return [];
+
+  const files = fs
+    .readdirSync(CONTENT_DIR)
+    .filter((f) => f.endsWith(".md"));
+
+  const items: NewsItem[] = files.map((filename) => {
+    const slug = filename.replace(/\.md$/, "");
+    const raw = fs.readFileSync(path.join(CONTENT_DIR, filename), "utf-8");
+    const { data, content } = matter(raw);
+    return {
+      slug,
+      date: formatDate(data.date),
+      category: String(data.category ?? ""),
+      title: String(data.title ?? ""),
+      body: content,
+      thumbnail: data.thumbnail ?? undefined,
+    };
+  });
+
+  return items.sort((a, b) => b.date.localeCompare(a.date));
 }
