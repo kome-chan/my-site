@@ -38,8 +38,7 @@ function PointCloud() {
       <pointsMaterial
         size={0.005}
         sizeAttenuation
-        vertexColors={hasColors}
-        color={hasColors ? "#ffffff" : "#5BA3E0"}
+        color="#5BA3E0"
         transparent
         opacity={0.95}
       />
