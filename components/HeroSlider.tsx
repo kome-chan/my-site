@@ -1,32 +1,80 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import type { SlideItem } from "@/lib/slider";
 
 const focusRing =
-  "focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 focus-visible:outline";
+  "focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 focus-visible:outline";
 
 export default function HeroSlider({ slides }: { slides: SlideItem[] }) {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [current, setCurrent] = useState(0);
   const multiple = slides.length > 1;
 
+  // タッチ操作用
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+
+  const go = useCallback(
+    (index: number) => {
+      setCurrent((index + slides.length) % slides.length);
+    },
+    [slides.length]
+  );
+
+  const prev = useCallback(() => go(current - 1), [current, go]);
+  const next = useCallback(() => go(current + 1), [current, go]);
+
+  // 自動切替: current が変わるたびタイマーをリセット
   useEffect(() => {
     if (!multiple) return;
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
+      setCurrent((c) => (c + 1) % slides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [slides.length, multiple]);
+  }, [current, slides.length, multiple]);
+
+  // キーボード操作
+  useEffect(() => {
+    if (!multiple) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [prev, next, multiple]);
+
+  // タッチ操作
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    const dy = e.changedTouches[0].clientY - touchStartY.current;
+    // 縦スクロールより横移動が大きい場合のみ反応
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      dx < 0 ? next() : prev();
+    }
+    touchStartX.current = null;
+    touchStartY.current = null;
+  };
 
   return (
-    <section aria-label="ヒーロー" className="relative h-screen overflow-hidden">
-      {/* Image slider */}
+    <section
+      aria-label="ヒーロー"
+      className="relative h-screen overflow-hidden"
+      onTouchStart={multiple ? onTouchStart : undefined}
+      onTouchEnd={multiple ? onTouchEnd : undefined}
+    >
+      {/* 画像レイヤー */}
       <div className="absolute inset-0 z-0">
         {slides.map((slide, index) => (
           <div
             key={slide.slug}
             className="absolute inset-0 transition-opacity duration-1000"
-            style={{ opacity: index === currentSlide ? 1 : 0 }}
+            style={{ opacity: index === current ? 1 : 0 }}
           >
             <img
               src={slide.image}
@@ -38,7 +86,7 @@ export default function HeroSlider({ slides }: { slides: SlideItem[] }) {
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
       </div>
 
-      {/* Hero text */}
+      {/* ヒーローテキスト */}
       <div className="relative z-10 mx-auto flex h-full w-full max-w-7xl flex-col justify-center px-6 lg:px-12">
         <p className="mb-8 flex items-center gap-4 text-xs tracking-[0.4em] text-accent">
           <span className="inline-block h-px w-10 bg-accent" aria-hidden="true" />
@@ -70,23 +118,47 @@ export default function HeroSlider({ slides }: { slides: SlideItem[] }) {
         </div>
       </div>
 
-      {/* Dot navigation (2枚以上のときのみ表示) */}
+      {/* 左右矢印ボタン */}
+      {multiple && (
+        <>
+          <button
+            aria-label="前の画像へ"
+            onClick={prev}
+            className={`absolute left-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/30 text-white transition-colors hover:bg-white/50 sm:h-12 sm:w-12 ${focusRing}`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+          <button
+            aria-label="次の画像へ"
+            onClick={next}
+            className={`absolute right-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/30 text-white transition-colors hover:bg-white/50 sm:h-12 sm:w-12 ${focusRing}`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+        </>
+      )}
+
+      {/* ドットインジケーター */}
       {multiple && (
         <div
           role="group"
           aria-label="スライドナビゲーション"
-          className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 gap-2"
+          className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2"
         >
           {slides.map((slide, index) => (
             <button
               key={slide.slug}
-              aria-label={`スライド ${index + 1}${index === currentSlide ? "（現在表示中）" : ""}`}
-              aria-pressed={index === currentSlide}
-              onClick={() => setCurrentSlide(index)}
-              className={`h-2 w-2 rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 ${
-                index === currentSlide
-                  ? "bg-accent scale-125"
-                  : "bg-white/50 hover:bg-white/80"
+              aria-label={`画像${index + 1}へ`}
+              aria-pressed={index === current}
+              onClick={() => go(index)}
+              className={`h-2 rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 ${
+                index === current
+                  ? "w-6 bg-accent"
+                  : "w-2 bg-white/50 hover:bg-white/80"
               }`}
             />
           ))}
