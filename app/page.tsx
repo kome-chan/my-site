@@ -304,44 +304,45 @@ export default async function Home() {
                 </p>
               </div>
               <ul className="divide-y divide-black/10 border-y border-black/10">
-                {schedule.map((item) => (
-                  <li key={item.title}>
-                    {item.link ? (
-                      <a
-                        href={item.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`group grid gap-3 py-8 md:grid-cols-[140px_1fr] md:items-start md:gap-8 ${focusRing}`}
-                      >
-                        <time className="text-sm tracking-widest text-foreground/60">
-                          {item.date}
-                        </time>
-                        <div className="flex flex-col gap-1">
-                          <p className="font-serif text-base leading-relaxed text-foreground underline-offset-4 decoration-accent/60 group-hover:underline sm:text-lg">
-                            {item.title}
-                          </p>
-                          <p className="text-sm leading-loose text-foreground/60">
-                            {item.note}
-                          </p>
-                        </div>
-                      </a>
-                    ) : (
-                      <div className="grid gap-3 py-8 md:grid-cols-[140px_1fr] md:items-start md:gap-8">
-                        <time className="text-sm tracking-widest text-foreground/60">
-                          {item.date}
-                        </time>
-                        <div className="flex flex-col gap-1">
-                          <p className="font-serif text-base leading-relaxed text-foreground sm:text-lg">
-                            {item.title}
-                          </p>
-                          <p className="text-sm leading-loose text-foreground/60">
-                            {item.note}
-                          </p>
-                        </div>
+                {schedule.map((item) => {
+                  const inner = (
+                    <>
+                      <time className="text-sm tracking-widest text-foreground/60">
+                        {item.date}
+                      </time>
+                      <div className="flex flex-col gap-1">
+                        <p className={`font-serif text-base leading-relaxed text-foreground sm:text-lg ${item.link || item.slug ? "underline-offset-4 decoration-accent/60 group-hover:underline" : ""}`}>
+                          {item.title}
+                        </p>
+                        <p className="text-sm leading-loose text-foreground/60">{item.note}</p>
                       </div>
-                    )}
-                  </li>
-                ))}
+                    </>
+                  );
+                  const rowClass = "group grid gap-3 py-8 md:grid-cols-[140px_1fr] md:items-start md:gap-8";
+                  return (
+                    <li key={item.slug || item.title}>
+                      {item.link ? (
+                        <a
+                          href={item.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`${rowClass} transition-colors hover:text-accent ${focusRing}`}
+                        >
+                          {inner}
+                        </a>
+                      ) : item.slug ? (
+                        <Link
+                          href={`/schedule/${item.slug}`}
+                          className={`${rowClass} transition-colors hover:text-accent ${focusRing}`}
+                        >
+                          {inner}
+                        </Link>
+                      ) : (
+                        <div className={rowClass}>{inner}</div>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </section>

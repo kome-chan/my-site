@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { NewsItem } from "@/lib/news";
 
 const PER_PAGE = 3;
@@ -16,42 +17,47 @@ export default function NewsSection({ news }: { news: NewsItem[] }) {
   return (
     <>
       <ul className="divide-y divide-black/10 border-y border-black/10">
-        {items.map((item) =>
-          item.link ? (
-            <li key={item.title}>
-              <a
-                href={item.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`group grid gap-3 py-8 transition-colors hover:text-accent md:grid-cols-[140px_120px_1fr] md:items-center md:gap-8 ${focusRing}`}
-              >
-                <time className="text-sm tracking-widest text-foreground/60">
-                  {item.date}
-                </time>
-                <span className="inline-block w-fit border border-accent/50 px-3 py-1 text-xs tracking-widest text-accent">
-                  {item.category}
-                </span>
-                <p className="font-serif text-base leading-relaxed underline-offset-4 decoration-accent/60 group-hover:underline sm:text-lg">
-                  {item.title}
-                </p>
-              </a>
+        {items.map((item) => {
+          const inner = (
+            <>
+              <time className="text-sm tracking-widest text-foreground/60">
+                {item.date}
+              </time>
+              <span className="inline-block w-fit border border-accent/50 px-3 py-1 text-xs tracking-widest text-accent">
+                {item.category}
+              </span>
+              <p className={`font-serif text-base leading-relaxed sm:text-lg ${item.link || item.slug ? "underline-offset-4 decoration-accent/60 group-hover:underline" : ""}`}>
+                {item.title}
+              </p>
+            </>
+          );
+
+          const rowClass = `group grid gap-3 py-8 md:grid-cols-[140px_120px_1fr] md:items-center md:gap-8`;
+
+          return (
+            <li key={item.slug || item.title}>
+              {item.link ? (
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${rowClass} transition-colors hover:text-accent ${focusRing}`}
+                >
+                  {inner}
+                </a>
+              ) : item.slug ? (
+                <Link
+                  href={`/news/${item.slug}`}
+                  className={`${rowClass} transition-colors hover:text-accent ${focusRing}`}
+                >
+                  {inner}
+                </Link>
+              ) : (
+                <div className={rowClass}>{inner}</div>
+              )}
             </li>
-          ) : (
-            <li key={item.title}>
-              <div className="grid gap-3 py-8 md:grid-cols-[140px_120px_1fr] md:items-center md:gap-8">
-                <time className="text-sm tracking-widest text-foreground/60">
-                  {item.date}
-                </time>
-                <span className="inline-block w-fit border border-accent/50 px-3 py-1 text-xs tracking-widest text-accent">
-                  {item.category}
-                </span>
-                <p className="font-serif text-base leading-relaxed sm:text-lg">
-                  {item.title}
-                </p>
-              </div>
-            </li>
-          )
-        )}
+          );
+        })}
       </ul>
 
       {/* ページネーション */}
