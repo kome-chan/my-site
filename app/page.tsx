@@ -35,7 +35,7 @@ const activities = [
     title: "成長",
     subtitle: "Growth",
     description:
-      "学び続ける姿勢こそ経営の本質。研鑽の機会を通じて、個と組織の持続的な成長を支援します。",
+      "学び続ける姿勢こそ経営の本質。研鑽の機会を通じて個と組織の成長を支援するとともに、次代を担う若手起業家への出資・支援も視野に入れ、新たな価値創造を後押しします。",
     href: "/growth",
   },
 ];
@@ -310,7 +310,7 @@ export default async function Home() {
                   <li key={item.title}>
                     <Link
                       href={item.href}
-                      className={`group relative flex flex-col gap-6 border border-black/10 bg-surface/40 p-8 transition-all duration-300 hover:border-accent/50 hover:scale-105 cursor-pointer lg:p-10 ${focusRing}`}
+                      className={`group relative flex h-full flex-col gap-6 border border-black/10 bg-surface/40 p-8 transition-all duration-300 hover:border-accent/50 hover:scale-105 cursor-pointer lg:p-10 ${focusRing}`}
                     >
                       <div className="flex items-baseline justify-between" aria-hidden="true">
                         <span className="font-serif text-xs tracking-[0.3em] text-accent">
@@ -623,7 +623,7 @@ export default async function Home() {
               <p className="font-serif text-sm tracking-[0.2em] text-foreground/70">
                 横浜国立大学経営者会 <span className="text-accent">和田町会</span>
               </p>
-              <p>© 2025 横浜国立大学経営者会 All Rights Reserved.</p>
+              <p>© 2026 横浜国立大学経営者会 All Rights Reserved.</p>
             </div>
           </div>
         </footer>
