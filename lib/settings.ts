@@ -78,3 +78,44 @@ export async function getFooterSettings(): Promise<FooterSettings> {
     copyright: "© 和田町会 横浜国立大学経営者会",
   });
 }
+
+export type ChairmanSettings = {
+  name: string;
+  title: string;
+  photo: string;
+  message: string;
+};
+
+export type HistoryItem = { year: string; event: string };
+export type HistorySettings = { items: HistoryItem[] };
+
+export type ActivityItem = { title: string; subtitle: string; description: string };
+export type ActivitiesSettings = { items: ActivityItem[] };
+
+export async function getChairmanSettings(): Promise<ChairmanSettings> {
+  return loadYml<ChairmanSettings>("chairman.yml", {
+    name: "",
+    title: "会長",
+    photo: "",
+    message: "",
+  });
+}
+
+export async function getHistorySettings(): Promise<HistorySettings> {
+  return loadYml<HistorySettings>("history.yml", {
+    items: [
+      { year: "1952年", event: "和田町会 設立" },
+      { year: "2002年", event: "創立50周年記念事業実施" },
+    ],
+  });
+}
+
+export async function getActivitiesSettings(): Promise<ActivitiesSettings> {
+  return loadYml<ActivitiesSettings>("activities.yml", {
+    items: [
+      { title: "講義", subtitle: "LECTURE", description: "各分野の専門家を招いた定例講演会を開催します。" },
+      { title: "交流", subtitle: "NETWORKING", description: "会員相互の懇親会や交流イベントを通じ、ネットワークを形成します。" },
+      { title: "成長", subtitle: "GROWTH", description: "次世代経営者の育成に貢献します。" },
+    ],
+  });
+}

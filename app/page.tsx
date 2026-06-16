@@ -11,93 +11,13 @@ import {
   getJoinSettings,
   getSnsSettings,
   getFooterSettings,
+  getChairmanSettings,
+  getHistorySettings,
+  getActivitiesSettings,
 } from "@/lib/settings";
+import { getMembers } from "@/lib/members";
 
 export const revalidate = 60;
-
-const activities = [
-  {
-    title: "講義",
-    subtitle: "Lecture",
-    description:
-      "各界の第一線で活躍する経営者・研究者を招き、最新の経営理論と実践知に触れる定例講義を開催しています。",
-    href: "/lecture",
-  },
-  {
-    title: "交流",
-    subtitle: "Networking",
-    description:
-      "業界・世代を超えた会員同士が、信頼に基づく対話を重ねながら、長期的なネットワークを築く場を提供します。",
-    href: "/networking",
-  },
-  {
-    title: "成長",
-    subtitle: "Growth",
-    description:
-      "学び続ける姿勢こそ経営の本質。研鑽の機会を通じて個と組織の成長を支援するとともに、次代を担う若手起業家への出資・支援も視野に入れ、新たな価値創造を後押しします。",
-    href: "/growth",
-  },
-];
-
-type SnsLink = { label: string; href: string };
-
-type Member = {
-  name: string;
-  company: string;
-  role: string;
-  year: string;
-  companyUrl?: string;
-  sns?: SnsLink[];
-};
-
-const members: Member[] = [
-  {
-    name: "山田 太郎",
-    company: "山田商事株式会社",
-    role: "会長 / 代表取締役社長",
-    year: "1985年卒",
-    companyUrl: "https://example.com",
-    sns: [
-      { label: "X", href: "https://x.com/example" },
-      { label: "LinkedIn", href: "https://linkedin.com/in/example" },
-    ],
-  },
-  {
-    name: "鈴木 花子",
-    company: "鈴木工業株式会社",
-    role: "副会長 / 取締役会長",
-    year: "1988年卒",
-    companyUrl: "https://example.com",
-  },
-  {
-    name: "田中 一郎",
-    company: "田中コンサルティング",
-    role: "幹事 / 代表取締役",
-    year: "1991年卒",
-    sns: [{ label: "note", href: "https://note.com/example" }],
-  },
-  {
-    name: "佐藤 次郎",
-    company: "佐藤製造株式会社",
-    role: "幹事 / 代表取締役社長",
-    year: "1993年卒",
-    companyUrl: "https://example.com",
-    sns: [{ label: "LinkedIn", href: "https://linkedin.com/in/example" }],
-  },
-  {
-    name: "伊藤 美穂",
-    company: "伊藤不動産株式会社",
-    role: "会計 / 取締役副社長",
-    year: "1996年卒",
-  },
-  {
-    name: "渡辺 健司",
-    company: "渡辺物流株式会社",
-    role: "監事 / 代表取締役",
-    year: "1999年卒",
-    companyUrl: "https://example.com",
-  },
-];
 
 const focusRing =
   "focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 focus-visible:outline";
@@ -112,6 +32,10 @@ export default async function Home() {
   const joinSettings = await getJoinSettings();
   const snsSettings = await getSnsSettings();
   const footerSettings = await getFooterSettings();
+  const chairmanSettings = await getChairmanSettings();
+  const historySettings = await getHistorySettings();
+  const activitiesSettings = await getActivitiesSettings();
+  const members = await getMembers();
 
   return (
     <>
@@ -187,26 +111,13 @@ export default async function Home() {
                   <h3 className="font-serif text-2xl font-medium leading-snug text-foreground">
                     設立経緯
                   </h3>
-                  <p className="text-sm leading-loose text-foreground/70">
-                    戦後復興の只中にあった1952年、横浜国立大学の前身校に学んだ実業家有志が、母校の所在地「和田町」の名を冠して結成したのが本会の始まりです。以来70年以上にわたり、時代の変遷とともに会の役割を拡げながらも、「学び続ける経営者の集い」という創立の理念を変わらず受け継いでいます。
-                  </p>
                   <ul className="mt-2 space-y-3 text-xs tracking-wider text-foreground/60">
-                    <li className="flex gap-6">
-                      <span className="w-20 shrink-0 text-accent/80">1952</span>
-                      <span>和田町会 創立</span>
-                    </li>
-                    <li className="flex gap-6">
-                      <span className="w-20 shrink-0 text-accent/80">1978</span>
-                      <span>定例講演会の通算100回を達成</span>
-                    </li>
-                    <li className="flex gap-6">
-                      <span className="w-20 shrink-0 text-accent/80">2002</span>
-                      <span>創立50周年記念事業・奨学基金を設立</span>
-                    </li>
-                    <li className="flex gap-6">
-                      <span className="w-20 shrink-0 text-accent/80">2022</span>
-                      <span>創立70周年を迎える</span>
-                    </li>
+                    {historySettings.items.map((item) => (
+                      <li key={item.year} className="flex gap-6">
+                        <span className="w-20 shrink-0 text-accent/80">{item.year}</span>
+                        <span>{item.event}</span>
+                      </li>
+                    ))}
                   </ul>
                 </article>
 
@@ -218,6 +129,13 @@ export default async function Home() {
                   <h3 className="font-serif text-2xl font-medium leading-snug text-foreground">
                     会長メッセージ
                   </h3>
+                  {chairmanSettings.photo && (
+                    <img
+                      src={chairmanSettings.photo}
+                      alt={`${chairmanSettings.name} 写真`}
+                      className="h-20 w-20 rounded-full object-cover"
+                    />
+                  )}
                   <blockquote className="relative">
                     <span
                       aria-hidden="true"
@@ -225,14 +143,14 @@ export default async function Home() {
                     >
                       "
                     </span>
-                    <p className="pl-4 text-sm leading-loose text-foreground/70">
-                      経営とは、答えのない問いに向き合い続ける営みです。和田町会は、立場や世代を超えた仲間とともに、その問いを磨き合う場でありたいと願っております。母校で培った知と縁を礎に、社会の持続的発展へと貢献してまいります。
+                    <p className="whitespace-pre-line pl-4 text-sm leading-loose text-foreground/70">
+                      {chairmanSettings.message}
                     </p>
                   </blockquote>
                   <div className="mt-2 border-t border-black/10 pt-4">
-                    <p className="font-serif text-base text-foreground">山田 太郎</p>
+                    <p className="font-serif text-base text-foreground">{chairmanSettings.name}</p>
                     <p className="mt-1 text-xs tracking-widest text-foreground/60">
-                      第18代 会長 / 1985年経営学部卒
+                      {chairmanSettings.title}
                     </p>
                   </div>
                 </article>
@@ -257,12 +175,9 @@ export default async function Home() {
                 </p>
               </div>
               <ul className="grid gap-6 md:grid-cols-3 md:gap-8">
-                {activities.map((item, index) => (
+                {activitiesSettings.items.map((item, index) => (
                   <li key={item.title}>
-                    <Link
-                      href={item.href}
-                      className={`group relative flex h-full flex-col gap-6 border border-black/10 bg-surface/40 p-8 transition-all duration-300 hover:border-accent/50 hover:scale-105 cursor-pointer lg:p-10 ${focusRing}`}
-                    >
+                    <div className="group relative flex h-full flex-col gap-6 border border-black/10 bg-surface/40 p-8 lg:p-10">
                       <div className="flex items-baseline justify-between" aria-hidden="true">
                         <span className="font-serif text-xs tracking-[0.3em] text-accent">
                           0{index + 1}
@@ -279,9 +194,9 @@ export default async function Home() {
                       </p>
                       <span
                         aria-hidden="true"
-                        className="mt-4 inline-block h-px w-12 bg-accent/60 transition-all group-hover:w-20"
+                        className="mt-4 inline-block h-px w-12 bg-accent/60"
                       />
-                    </Link>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -383,15 +298,29 @@ export default async function Home() {
               </div>
               <ul className="grid gap-6 md:grid-cols-3 md:gap-8">
                 {members.map((member, index) => (
-                  <li key={member.name}>
+                  <li key={member.slug}>
                     <div className="flex flex-col border border-black/10 bg-surface/40">
+                      {member.photo && (
+                        <img
+                          src={member.photo}
+                          alt={`${member.name} 写真`}
+                          className="h-48 w-full object-cover object-top"
+                        />
+                      )}
+                      {!member.photo && (
+                        <div className="flex h-48 w-full items-center justify-center bg-surface/60">
+                          <span className="font-serif text-3xl text-foreground/20">
+                            {member.name.charAt(0)}
+                          </span>
+                        </div>
+                      )}
                       <div className="flex flex-col gap-6 p-8 lg:p-10">
                         <div className="flex items-baseline justify-between" aria-hidden="true">
                           <span className="font-serif text-xs tracking-[0.3em] text-accent">
                             {String(index + 1).padStart(2, "0")}
                           </span>
                           <span className="text-xs tracking-[0.3em] text-foreground/60">
-                            {member.year}
+                            {member.graduationYear}
                           </span>
                         </div>
                         <div className="flex flex-col gap-2">
@@ -418,23 +347,6 @@ export default async function Home() {
                             <p className="text-sm leading-loose text-foreground/70">
                               {member.company}
                             </p>
-                          )}
-                          {member.sns && member.sns.length > 0 && (
-                            <ul className="flex flex-wrap gap-2">
-                              {member.sns.map((link) => (
-                                <li key={link.label}>
-                                  <a
-                                    href={link.href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    aria-label={`${member.name}の${link.label}（外部リンク）`}
-                                    className={`inline-block border border-accent/40 px-3 py-1 text-xs tracking-widest text-accent/80 transition-colors hover:border-accent hover:text-accent ${focusRing}`}
-                                  >
-                                    {link.label}
-                                  </a>
-                                </li>
-                              ))}
-                            </ul>
                           )}
                         </div>
                       </div>

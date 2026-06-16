@@ -57,7 +57,7 @@ collections:
         label: "トップページ"
         name: "home"
         fields:
-          - { label: "キャッチコピー", name: "catchphrase", widget: "string", default: "知を磨き、次代の経営を拓く。" }
+          - { label: "キャッチコピー", name: "catchphrase", widget: "text", default: "知を磨き、\n次代の経営を拓く。", hint: "改行が表示に反映されます" }
           - { label: "創立年表記", name: "since", widget: "string", default: "SINCE 1952" }
 
       - file: "content/settings/about.yml"
@@ -88,3 +88,54 @@ collections:
         name: "footer"
         fields:
           - { label: "コピーライト表記", name: "copyright", widget: "string", default: "© 和田町会 横浜国立大学経営者会" }
+
+      - file: "content/settings/chairman.yml"
+        label: "会長メッセージ"
+        name: "chairman"
+        fields:
+          - { label: "会長名", name: "name", widget: "string", default: "" }
+          - { label: "役職", name: "title", widget: "string", default: "会長", required: false }
+          - { label: "顔写真", name: "photo", widget: "image", required: false, hint: "正方形・500px以上推奨" }
+          - { label: "メッセージ本文", name: "message", widget: "text", default: "", hint: "改行も反映されます" }
+
+      - file: "content/settings/history.yml"
+        label: "設立経緯(タイムライン)"
+        name: "history"
+        fields:
+          - label: "年表"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.year}} - {{fields.event}}"
+            fields:
+              - { label: "年", name: "year", widget: "string", hint: "例: 1952年" }
+              - { label: "出来事", name: "event", widget: "string" }
+
+      - file: "content/settings/activities.yml"
+        label: "活動内容"
+        name: "activities"
+        fields:
+          - label: "活動カテゴリ"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.title}}"
+            max: 6
+            fields:
+              - { label: "タイトル", name: "title", widget: "string", hint: "例: 講義 / 交流 / 成長" }
+              - { label: "英語表記", name: "subtitle", widget: "string", required: false, hint: "例: LECTURE" }
+              - { label: "説明文", name: "description", widget: "text" }
+
+  - name: "members"
+    label: "役員・会員紹介"
+    folder: "content/members"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{random}}"
+    summary: "{{name}} - {{role}}"
+    sortable_fields: ['order']
+    fields:
+      - { label: "表示順", name: "order", widget: "number", default: 1, min: 1, hint: "数字が小さい順に表示されます" }
+      - { label: "お名前", name: "name", widget: "string" }
+      - { label: "役職", name: "role", widget: "string", required: false, hint: "例: 会長 / 副会長 / 理事" }
+      - { label: "ご所属企業名", name: "company", widget: "string", required: false }
+      - { label: "卒業年度", name: "graduationYear", widget: "string", required: false, hint: "例: 1985年卒" }
+      - { label: "お顔写真", name: "photo", widget: "image", required: false }
+      - { label: "企業WebサイトURL", name: "companyUrl", widget: "string", required: false, hint: "https:// から入力" }

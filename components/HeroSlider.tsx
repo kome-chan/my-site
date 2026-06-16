@@ -99,7 +99,12 @@ export default function HeroSlider({ slides, catchphrase, since }: Props) {
           {since}
         </p>
         <h1 className="font-serif text-4xl font-medium leading-[1.3] text-white sm:text-5xl lg:text-6xl lg:leading-[1.25]">
-          {catchphrase}
+          {catchphrase.split("\n").map((line, i, arr) => (
+            <span key={i}>
+              {line}
+              {i < arr.length - 1 && <br />}
+            </span>
+          ))}
         </h1>
         <p className="mt-10 max-w-2xl text-base leading-loose text-white/70 sm:text-lg">
           横浜国立大学経営者会は、卒業生有志により設立された経営者・実務家のための学びと交流の場です。

@@ -1,0 +1,10 @@
+items:
+  - title: "講義"
+    subtitle: "LECTURE"
+    description: "各分野の専門家を招いた定例講演会を開催し、最新の知見を共有します。"
+  - title: "交流"
+    subtitle: "NETWORKING"
+    description: "会員相互の懇親会や交流イベントを通じ、業界を超えた人的ネットワークを形成します。"
+  - title: "成長"
+    subtitle: "GROWTH"
+    description: "若手起業家への出資・支援活動を通じて、次世代経営者の育成に貢献します。"
