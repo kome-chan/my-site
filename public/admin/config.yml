@@ -70,15 +70,6 @@ collections:
           - { label: "所在地", name: "location", widget: "string", default: "横浜市保土ケ谷区" }
           - { label: "設立年", name: "establishedYear", widget: "string", default: "1952年" }
 
-      - file: "content/settings/chairman.yml"
-        label: "会長メッセージ"
-        name: "chairman"
-        fields:
-          - { label: "会長名", name: "name", widget: "string", default: "" }
-          - { label: "役職", name: "title", widget: "string", default: "会長", required: false }
-          - { label: "顔写真", name: "photo", widget: "image", required: false, hint: "正方形・500px以上推奨" }
-          - { label: "メッセージ本文", name: "message", widget: "text", default: "", hint: "改行も反映されます" }
-
       - file: "content/settings/history.yml"
         label: "設立経緯(タイムライン)"
         name: "history"
@@ -90,6 +81,15 @@ collections:
             fields:
               - { label: "年", name: "year", widget: "string", hint: "例: 1952年" }
               - { label: "出来事", name: "event", widget: "string" }
+
+      - file: "content/settings/chairman.yml"
+        label: "会長メッセージ"
+        name: "chairman"
+        fields:
+          - { label: "会長名", name: "name", widget: "string", default: "" }
+          - { label: "役職", name: "title", widget: "string", default: "会長", required: false }
+          - { label: "顔写真", name: "photo", widget: "image", required: false, hint: "正方形・500px以上推奨" }
+          - { label: "メッセージ本文", name: "message", widget: "text", default: "", hint: "改行も反映されます" }
 
       - file: "content/settings/activities.yml"
         label: "活動内容"
