@@ -56,6 +56,7 @@ export default async function Home() {
             slides={slides}
             catchphrase={homeSettings.catchphrase}
             since={homeSettings.since}
+            subtext={homeSettings.subtext}
           />
 
           {/* ABOUT */}

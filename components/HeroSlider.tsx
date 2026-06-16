@@ -10,9 +10,10 @@ type Props = {
   slides: SlideItem[];
   catchphrase: string;
   since: string;
+  subtext: string;
 };
 
-export default function HeroSlider({ slides, catchphrase, since }: Props) {
+export default function HeroSlider({ slides, catchphrase, since, subtext }: Props) {
   const [current, setCurrent] = useState(0);
   const multiple = slides.length > 1;
 
@@ -106,9 +107,8 @@ export default function HeroSlider({ slides, catchphrase, since }: Props) {
             </span>
           ))}
         </h1>
-        <p className="mt-10 max-w-2xl text-base leading-loose text-white/70 sm:text-lg">
-          横浜国立大学経営者会は、卒業生有志により設立された経営者・実務家のための学びと交流の場です。
-          半世紀以上にわたり、経営の知見を深め合い、社会への責任を果たす人材を輩出してきました。
+        <p className="mt-10 max-w-2xl whitespace-pre-line text-base leading-loose text-white/70 sm:text-lg">
+          {subtext}
         </p>
         <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:items-center">
           <a

@@ -18,6 +18,7 @@ function loadYml<T>(filename: string, defaults: T): T {
 export type HomeSettings = {
   catchphrase: string;
   since: string;
+  subtext: string;
 };
 
 export type AboutSettings = {
@@ -45,6 +46,7 @@ export async function getHomeSettings(): Promise<HomeSettings> {
   return loadYml<HomeSettings>("home.yml", {
     catchphrase: "知を磨き、次代の経営を拓く。",
     since: "SINCE 1952",
+    subtext: "横浜国立大学経営者会は、卒業生有志により設立された経営者・実務家のための学びと交流の場です。半世紀以上にわたり、経営の知見を深め合い、社会への責任を果たす人材を輩出してきました。",
   });
 }
 

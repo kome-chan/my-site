@@ -59,35 +59,16 @@ collections:
         fields:
           - { label: "キャッチコピー", name: "catchphrase", widget: "text", default: "知を磨き、\n次代の経営を拓く。", hint: "改行が表示に反映されます" }
           - { label: "創立年表記", name: "since", widget: "string", default: "SINCE 1952" }
+          - { label: "サブテキスト", name: "subtext", widget: "text", default: "横浜国立大学経営者会は、卒業生有志により設立された経営者・実務家のための学びと交流の場です。半世紀以上にわたり、経営の知見を深め合い、社会への責任を果たす人材を輩出してきました。", hint: "キャッチコピーの下に表示される説明文" }
 
       - file: "content/settings/about.yml"
-        label: "和田町会について"
+        label: "会の概要"
         name: "about"
         fields:
           - { label: "会の概要文", name: "description", widget: "text", default: "" }
           - { label: "会員数", name: "memberCount", widget: "string", default: "約100名" }
           - { label: "所在地", name: "location", widget: "string", default: "横浜市保土ケ谷区" }
           - { label: "設立年", name: "establishedYear", widget: "string", default: "1952年" }
-
-      - file: "content/settings/join.yml"
-        label: "入会案内"
-        name: "join"
-        fields:
-          - { label: "入会案内文", name: "description", widget: "text", default: "" }
-          - { label: "入会フォームURL", name: "formUrl", widget: "string", default: "#", required: false, hint: "Googleフォーム等のURL" }
-
-      - file: "content/settings/sns.yml"
-        label: "SNSリンク"
-        name: "sns"
-        fields:
-          - { label: "Facebook URL", name: "facebook", widget: "string", default: "#", required: false }
-          - { label: "X(Twitter) URL", name: "twitter", widget: "string", default: "#", required: false }
-
-      - file: "content/settings/footer.yml"
-        label: "フッター・全般"
-        name: "footer"
-        fields:
-          - { label: "コピーライト表記", name: "copyright", widget: "string", default: "© 和田町会 横浜国立大学経営者会" }
 
       - file: "content/settings/chairman.yml"
         label: "会長メッセージ"
@@ -123,6 +104,26 @@ collections:
               - { label: "タイトル", name: "title", widget: "string", hint: "例: 講義 / 交流 / 成長" }
               - { label: "英語表記", name: "subtitle", widget: "string", required: false, hint: "例: LECTURE" }
               - { label: "説明文", name: "description", widget: "text" }
+
+      - file: "content/settings/join.yml"
+        label: "入会案内"
+        name: "join"
+        fields:
+          - { label: "入会案内文", name: "description", widget: "text", default: "" }
+          - { label: "入会フォームURL", name: "formUrl", widget: "string", default: "#", required: false, hint: "Googleフォーム等のURL" }
+
+      - file: "content/settings/sns.yml"
+        label: "SNSリンク"
+        name: "sns"
+        fields:
+          - { label: "Facebook URL", name: "facebook", widget: "string", default: "#", required: false }
+          - { label: "X(Twitter) URL", name: "twitter", widget: "string", default: "#", required: false }
+
+      - file: "content/settings/footer.yml"
+        label: "フッター・全般"
+        name: "footer"
+        fields:
+          - { label: "コピーライト表記", name: "copyright", widget: "string", default: "© 和田町会 横浜国立大学経営者会" }
 
   - name: "members"
     label: "役員・会員紹介"
