@@ -130,10 +130,14 @@ collections:
     folder: "content/members"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{random}}"
-    summary: "{{name}} - {{role}}"
-    sortable_fields: ['order']
+    summary: "{{fields.name}} - {{fields.role}}"
+    sortable_fields:
+      - name
+      - role
+    view_groups:
+      - label: "役職"
+        field: role
     fields:
-      - { label: "表示順", name: "order", widget: "number", default: 1, min: 1, hint: "数字が小さい順に表示されます" }
       - { label: "お名前", name: "name", widget: "string" }
       - { label: "役職", name: "role", widget: "string", required: false, hint: "例: 会長 / 副会長 / 理事" }
       - { label: "ご所属企業名", name: "company", widget: "string", required: false }

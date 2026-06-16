@@ -297,59 +297,49 @@ export default async function Home() {
                   各界で活躍する会員が、母校への思いと経営への志を共有しています。
                 </p>
               </div>
-              <ul className="grid gap-6 md:grid-cols-3 md:gap-8">
-                {members.map((member, index) => (
+              <ul className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
+                {members.map((member) => (
                   <li key={member.slug}>
-                    <div className="flex flex-col border border-black/10 bg-surface/40">
+                    <div className="flex flex-col border border-black/10 bg-white transition hover:shadow-md">
                       {member.photo && (
-                        <img
-                          src={member.photo}
-                          alt={`${member.name} 写真`}
-                          className="h-48 w-full object-cover object-top"
-                        />
-                      )}
-                      {!member.photo && (
-                        <div className="flex h-48 w-full items-center justify-center bg-surface/60">
-                          <span className="font-serif text-3xl text-foreground/20">
-                            {member.name.charAt(0)}
-                          </span>
+                        <div className="aspect-square w-full overflow-hidden">
+                          <img
+                            src={member.photo}
+                            alt={`${member.name} 写真`}
+                            className="h-full w-full object-cover"
+                          />
                         </div>
                       )}
-                      <div className="flex flex-col gap-6 p-8 lg:p-10">
-                        <div className="flex items-baseline justify-between" aria-hidden="true">
-                          <span className="font-serif text-xs tracking-[0.3em] text-accent">
-                            {String(index + 1).padStart(2, "0")}
-                          </span>
-                          <span className="text-xs tracking-[0.3em] text-foreground/60">
-                            {member.graduationYear}
-                          </span>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          <p className="font-serif text-2xl font-medium text-foreground">
-                            {member.name}
-                          </p>
-                          <p className="text-xs tracking-wider text-foreground/60">
+                      <div className="flex flex-col gap-1 p-4">
+                        {member.role && (
+                          <p className="text-xs tracking-widest text-accent">
                             {member.role}
                           </p>
-                        </div>
-                        <div className="flex flex-col gap-3 border-t border-black/10 pt-4">
-                          {member.companyUrl ? (
-                            <a
-                              href={member.companyUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              aria-label={`${member.company}（外部リンク）`}
-                              className={`text-sm leading-loose text-foreground/70 transition-colors hover:text-accent ${focusRing}`}
-                            >
-                              {member.company}
-                              <span aria-hidden="true" className="ml-2 text-accent/60">↗</span>
-                            </a>
-                          ) : (
-                            <p className="text-sm leading-loose text-foreground/70">
-                              {member.company}
-                            </p>
-                          )}
-                        </div>
+                        )}
+                        <p className="font-serif text-base font-medium text-foreground">
+                          {member.name}
+                        </p>
+                        {member.company && (
+                          <p className="mt-1 text-xs text-foreground/60">
+                            {member.companyUrl ? (
+                              <a
+                                href={member.companyUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={`${member.company}（外部リンク）`}
+                                className={`transition-colors hover:text-accent ${focusRing}`}
+                              >
+                                {member.company}
+                                <span aria-hidden="true" className="ml-1 text-accent/60">↗</span>
+                              </a>
+                            ) : (
+                              member.company
+                            )}
+                          </p>
+                        )}
+                        {member.graduationYear && (
+                          <p className="text-xs text-foreground/40">{member.graduationYear}</p>
+                        )}
                       </div>
                     </div>
                   </li>
