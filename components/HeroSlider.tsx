@@ -6,7 +6,13 @@ import type { SlideItem } from "@/lib/slider";
 const focusRing =
   "focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 focus-visible:outline";
 
-export default function HeroSlider({ slides }: { slides: SlideItem[] }) {
+type Props = {
+  slides: SlideItem[];
+  catchphrase: string;
+  since: string;
+};
+
+export default function HeroSlider({ slides, catchphrase, since }: Props) {
   const [current, setCurrent] = useState(0);
   const multiple = slides.length > 1;
 
@@ -90,12 +96,10 @@ export default function HeroSlider({ slides }: { slides: SlideItem[] }) {
       <div className="relative z-10 mx-auto flex h-full w-full max-w-7xl flex-col justify-center px-6 lg:px-12">
         <p className="mb-8 flex items-center gap-4 text-xs tracking-[0.4em] text-accent">
           <span className="inline-block h-px w-10 bg-accent" aria-hidden="true" />
-          SINCE 1952
+          {since}
         </p>
         <h1 className="font-serif text-4xl font-medium leading-[1.3] text-white sm:text-5xl lg:text-6xl lg:leading-[1.25]">
-          知を磨き、
-          <br />
-          次代の経営を拓く。
+          {catchphrase}
         </h1>
         <p className="mt-10 max-w-2xl text-base leading-loose text-white/70 sm:text-lg">
           横浜国立大学経営者会は、卒業生有志により設立された経営者・実務家のための学びと交流の場です。

@@ -5,6 +5,13 @@ import NewsSection from "@/components/NewsSection";
 import { getNews } from "@/lib/news";
 import { getSchedule } from "@/lib/schedule";
 import { getSlides } from "@/lib/slider";
+import {
+  getHomeSettings,
+  getAboutSettings,
+  getJoinSettings,
+  getSnsSettings,
+  getFooterSettings,
+} from "@/lib/settings";
 
 export const revalidate = 60;
 
@@ -100,6 +107,11 @@ export default async function Home() {
   const news = (await getNews()).sort((a, b) => b.date.localeCompare(a.date));
   const schedule = await getSchedule();
   const slides = await getSlides();
+  const homeSettings = await getHomeSettings();
+  const aboutSettings = await getAboutSettings();
+  const joinSettings = await getJoinSettings();
+  const snsSettings = await getSnsSettings();
+  const footerSettings = await getFooterSettings();
 
   return (
     <>
@@ -116,7 +128,11 @@ export default async function Home() {
 
         <main id="main-content" className="flex flex-1 flex-col">
           {/* HERO — Client Component (スライダー) */}
-          <HeroSlider slides={slides} />
+          <HeroSlider
+            slides={slides}
+            catchphrase={homeSettings.catchphrase}
+            since={homeSettings.since}
+          />
 
           {/* ABOUT */}
           <section id="about" aria-labelledby="about-heading">
@@ -145,20 +161,20 @@ export default async function Home() {
                     会の概要
                   </h3>
                   <p className="text-sm leading-loose text-foreground/70">
-                    和田町会は、横浜国立大学の卒業生を中心に、企業経営者・実務家・研究者をもって構成される任意団体です。定例講演会、研究部会、地域交流、後進育成のための奨学支援など、多面的な活動を通じて、会員相互の研鑽と母校の発展に資することを目的としています。
+                    {aboutSettings.description}
                   </p>
                   <dl className="mt-2 space-y-3 text-xs tracking-wider text-foreground/60">
                     <div className="flex gap-6">
                       <dt className="w-20 shrink-0 text-accent/80">設立</dt>
-                      <dd>1952年</dd>
+                      <dd>{aboutSettings.establishedYear}</dd>
                     </div>
                     <div className="flex gap-6">
                       <dt className="w-20 shrink-0 text-accent/80">会員数</dt>
-                      <dd>約100名</dd>
+                      <dd>{aboutSettings.memberCount}</dd>
                     </div>
                     <div className="flex gap-6">
                       <dt className="w-20 shrink-0 text-accent/80">所在地</dt>
-                      <dd>横浜市保土ケ谷区</dd>
+                      <dd>{aboutSettings.location}</dd>
                     </div>
                   </dl>
                 </article>
@@ -439,10 +455,10 @@ export default async function Home() {
                 共に学び、共に高め合う。
               </h2>
               <p className="mx-auto mt-8 max-w-xl text-sm leading-loose text-foreground/70 sm:text-base">
-                入会を希望される方、活動にご関心をお持ちの方は、下記より入会案内をご請求ください。
+                {joinSettings.description}
               </p>
               <a
-                href="#"
+                href={joinSettings.formUrl}
                 className={`mt-12 inline-flex items-center justify-center gap-3 bg-accent px-12 py-4 text-sm tracking-[0.2em] text-background transition-colors hover:bg-accent/90 ${focusRing}`}
               >
                 入会案内を請求する
@@ -463,7 +479,7 @@ export default async function Home() {
               </p>
               <div className="mt-12 flex items-center justify-center gap-8">
                 <a
-                  href="#"
+                  href={snsSettings.facebook}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook公式ページ（外部リンク）"
@@ -474,7 +490,7 @@ export default async function Home() {
                   </svg>
                 </a>
                 <a
-                  href="#"
+                  href={snsSettings.twitter}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="X / Twitter公式アカウント（外部リンク）"
@@ -530,7 +546,7 @@ export default async function Home() {
               <p className="font-serif text-sm tracking-[0.2em] text-foreground/70 text-center md:text-left">
                 横浜国立大学経営者会 <span className="text-accent">和田町会</span>
               </p>
-              <p className="text-center md:text-right">© 2026 横浜国立大学経営者会 All Rights Reserved.</p>
+              <p className="text-center md:text-right">{footerSettings.copyright}</p>
             </div>
           </div>
         </footer>
