@@ -131,29 +131,37 @@ export default async function Home() {
                   <h3 className="font-serif text-2xl font-medium leading-snug text-foreground">
                     会長メッセージ
                   </h3>
-                  {chairmanSettings.photo && (
-                    <img
-                      src={chairmanSettings.photo}
-                      alt={`${chairmanSettings.name} 写真`}
-                      className="h-20 w-20 rounded-full object-cover"
-                    />
-                  )}
-                  <blockquote className="relative">
-                    <span
-                      aria-hidden="true"
-                      className="absolute -left-2 -top-4 font-serif text-5xl leading-none text-accent/40"
-                    >
-                      "
-                    </span>
-                    <p className="whitespace-pre-line pl-4 text-sm leading-loose text-foreground/70">
-                      {chairmanSettings.message}
-                    </p>
-                  </blockquote>
-                  <div className="mt-2 border-t border-black/10 pt-4">
-                    <p className="font-serif text-base text-foreground">{chairmanSettings.name}</p>
-                    <p className="mt-1 text-xs tracking-widest text-foreground/60">
-                      {chairmanSettings.title}
-                    </p>
+                  <div className={`flex flex-col gap-8 ${chairmanSettings.photo ? "md:flex-row md:items-start md:gap-10" : ""}`}>
+                    {/* 左側: テキスト */}
+                    <div className="flex flex-1 flex-col gap-6">
+                      <blockquote className="relative">
+                        <span
+                          aria-hidden="true"
+                          className="absolute -left-2 -top-4 font-serif text-5xl leading-none text-accent/40"
+                        >
+                          "
+                        </span>
+                        <p className="whitespace-pre-line pl-4 text-sm leading-loose text-foreground/70">
+                          {chairmanSettings.message}
+                        </p>
+                      </blockquote>
+                      <div className="border-t border-black/10 pt-4">
+                        <p className="font-serif text-base text-foreground">{chairmanSettings.name}</p>
+                        <p className="mt-1 text-xs tracking-widest text-foreground/60">
+                          {chairmanSettings.title}
+                        </p>
+                      </div>
+                    </div>
+                    {/* 右側: 写真(ある場合のみ) */}
+                    {chairmanSettings.photo && (
+                      <div className="shrink-0 self-start">
+                        <img
+                          src={chairmanSettings.photo}
+                          alt={`${chairmanSettings.name} 写真`}
+                          className="w-40 object-cover md:w-72 aspect-[3/4]"
+                        />
+                      </div>
+                    )}
                   </div>
                 </article>
               </div>
