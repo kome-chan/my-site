@@ -130,6 +130,7 @@ collections:
     description: "役員・会員紹介を管理します。お顔写真を登録した方は上段に大きく(4名程度を推奨)、未登録の方は下段に一覧表示されます。表示順は「表示順」の数字で管理してください。"
     folder: "content/members"
     create: true
+    reorder: true
     slug: "{{year}}-{{month}}-{{day}}-{{random}}"
     identifier_field: name
     summary: "{{fields.order}}. {{fields.name}} - {{fields.role}}"
