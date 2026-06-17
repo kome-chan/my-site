@@ -127,18 +127,22 @@ collections:
 
   - name: "members"
     label: "役員・会員紹介"
-    description: "役員・会員紹介を管理します。お顔写真を登録した方は上段に大きく(4名程度を推奨)、未登録の方は下段に一覧表示されます。"
+    description: "役員・会員紹介を管理します。お顔写真を登録した方は上段に大きく(4名程度を推奨)、未登録の方は下段に一覧表示されます。表示順は「表示順」の数字で管理してください。"
     folder: "content/members"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{random}}"
-    summary: "{{fields.name}} - {{fields.role}}"
+    identifier_field: name
+    summary: "{{fields.order}}. {{fields.name}} - {{fields.role}}"
+    thumbnail: "{{fields.photo}}"
     sortable_fields:
+      - order
       - name
       - role
     view_groups:
       - label: "役職"
         field: role
     fields:
+      - { label: "表示順", name: "order", widget: "number", default: 99, min: 1, hint: "数字が小さいほど先に表示されます。並び替えたい場合はこの数字を変更してください。" }
       - { label: "お名前", name: "name", widget: "string" }
       - { label: "役職", name: "role", widget: "string", required: false, hint: "例: 会長 / 副会長 / 理事" }
       - { label: "ご所属企業名", name: "company", widget: "string", required: false }

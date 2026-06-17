@@ -317,7 +317,7 @@ export default async function Home() {
                               </div>
                               <div className="flex flex-col gap-1 p-4">
                                 {member.role && (
-                                  <p className="text-xs tracking-widest text-accent">
+                                  <p className="text-xs tracking-widest text-[#B8860B]">
                                     {member.role}
                                   </p>
                                 )}
