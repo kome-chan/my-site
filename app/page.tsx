@@ -158,7 +158,7 @@ export default async function Home() {
                         <img
                           src={chairmanSettings.photo}
                           alt={`${chairmanSettings.name} 写真`}
-                          className="w-40 object-cover md:w-72 aspect-[3/4]"
+                          className="w-24 rounded-full object-cover md:w-36 aspect-square"
                         />
                       </div>
                     )}

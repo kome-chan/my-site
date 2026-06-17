@@ -17,7 +17,6 @@ export default function HeroSlider({ slides, catchphrase, since, subtext }: Prop
   const [current, setCurrent] = useState(0);
   const multiple = slides.length > 1;
 
-  // タッチ操作用
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
 
@@ -60,13 +59,20 @@ export default function HeroSlider({ slides, catchphrase, since, subtext }: Prop
     if (touchStartX.current === null || touchStartY.current === null) return;
     const dx = e.changedTouches[0].clientX - touchStartX.current;
     const dy = e.changedTouches[0].clientY - touchStartY.current;
-    // 縦スクロールより横移動が大きい場合のみ反応
     if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
       dx < 0 ? next() : prev();
     }
     touchStartX.current = null;
     touchStartY.current = null;
   };
+
+  const onClickKeyDown =
+    (action: () => void) => (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        action();
+      }
+    };
 
   return (
     <section
@@ -75,7 +81,7 @@ export default function HeroSlider({ slides, catchphrase, since, subtext }: Prop
       onTouchStart={multiple ? onTouchStart : undefined}
       onTouchEnd={multiple ? onTouchEnd : undefined}
     >
-      {/* 画像レイヤー */}
+      {/* 画像レイヤー z-0 */}
       <div className="absolute inset-0 z-0">
         {slides.map((slide, index) => (
           <div
@@ -93,8 +99,42 @@ export default function HeroSlider({ slides, catchphrase, since, subtext }: Prop
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
       </div>
 
-      {/* ヒーローテキスト */}
-      <div className="relative z-10 mx-auto flex h-full w-full max-w-7xl flex-col justify-center px-6 lg:px-12">
+      {/* 左右クリック領域 z-10 (画像より上・テキストより下) */}
+      {multiple && (
+        <>
+          <div
+            role="button"
+            tabIndex={0}
+            aria-label="前の画像へ"
+            onClick={prev}
+            onKeyDown={onClickKeyDown(prev)}
+            className={`group absolute left-0 top-0 z-10 h-full w-1/2 cursor-pointer ${focusRing}`}
+          >
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white opacity-0 transition-opacity duration-300 [@media(hover:hover)]:group-hover:opacity-40">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </div>
+          </div>
+          <div
+            role="button"
+            tabIndex={0}
+            aria-label="次の画像へ"
+            onClick={next}
+            onKeyDown={onClickKeyDown(next)}
+            className={`group absolute right-0 top-0 z-10 h-full w-1/2 cursor-pointer ${focusRing}`}
+          >
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-white opacity-0 transition-opacity duration-300 [@media(hover:hover)]:group-hover:opacity-40">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* ヒーローテキスト z-20 / コンテナは pointer-events-none・リンクは pointer-events-auto */}
+      <div className="pointer-events-none relative z-20 mx-auto flex h-full w-full max-w-7xl flex-col justify-center px-6 lg:px-12">
         <p className="mb-8 flex items-center gap-4 text-xs tracking-[0.4em] text-accent">
           <span className="inline-block h-px w-10 bg-accent" aria-hidden="true" />
           {since}
@@ -113,65 +153,40 @@ export default function HeroSlider({ slides, catchphrase, since, subtext }: Prop
         <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:items-center">
           <a
             href="#join"
-            className={`inline-flex items-center justify-center gap-3 bg-accent px-10 py-4 text-sm tracking-[0.2em] text-background transition-colors hover:bg-accent/90 ${focusRing}`}
+            className={`pointer-events-auto inline-flex items-center justify-center gap-3 bg-accent px-10 py-4 text-sm tracking-[0.2em] text-background transition-colors hover:bg-accent/90 ${focusRing}`}
           >
             入会案内を見る
             <span aria-hidden="true">→</span>
           </a>
           <a
             href="#about"
-            className={`inline-flex items-center justify-center gap-3 border border-white/40 px-10 py-4 text-sm tracking-[0.2em] text-white transition-colors hover:border-accent hover:text-accent ${focusRing}`}
+            className={`pointer-events-auto inline-flex items-center justify-center gap-3 border border-white/40 px-10 py-4 text-sm tracking-[0.2em] text-white transition-colors hover:border-accent hover:text-accent ${focusRing}`}
           >
             和田町会について
           </a>
         </div>
       </div>
 
-      {/* 矢印 + ドットインジケーター */}
+      {/* ドットインジケーター z-30 */}
       {multiple && (
         <div
           role="group"
           aria-label="スライドナビゲーション"
-          className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 items-center gap-4"
+          className="absolute bottom-8 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2"
         >
-          {/* 前へ */}
-          <button
-            aria-label="前の画像へ"
-            onClick={prev}
-            className={`flex h-8 w-8 items-center justify-center rounded-full bg-white/30 text-white transition-colors hover:bg-white/50 ${focusRing}`}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-          </button>
-
-          {/* ドット */}
-          <div className="flex items-center gap-2">
-            {slides.map((slide, index) => (
-              <button
-                key={slide.slug}
-                aria-label={`画像${index + 1}へ`}
-                aria-pressed={index === current}
-                onClick={() => go(index)}
-                className={`h-2 rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 ${
-                  index === current
-                    ? "w-6 bg-accent"
-                    : "w-2 bg-white/50 hover:bg-white/80"
-                }`}
-              />
-            ))}
-          </div>
-
-          {/* 次へ */}
-          <button
-            aria-label="次の画像へ"
-            onClick={next}
-            className={`flex h-8 w-8 items-center justify-center rounded-full bg-white/30 text-white transition-colors hover:bg-white/50 ${focusRing}`}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </button>
+          {slides.map((slide, index) => (
+            <button
+              key={slide.slug}
+              aria-label={`画像${index + 1}へ`}
+              aria-pressed={index === current}
+              onClick={() => go(index)}
+              className={`h-2 rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 ${
+                index === current
+                  ? "w-6 bg-accent"
+                  : "w-2 bg-white/50 hover:bg-white/80"
+              }`}
+            />
+          ))}
         </div>
       )}
     </section>
