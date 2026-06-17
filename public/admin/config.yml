@@ -127,6 +127,7 @@ collections:
 
   - name: "members"
     label: "役員・会員紹介"
+    description: "役員・会員紹介を管理します。お顔写真を登録した方は上段に大きく(4名程度を推奨)、未登録の方は下段に一覧表示されます。"
     folder: "content/members"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{random}}"
@@ -142,5 +143,5 @@ collections:
       - { label: "役職", name: "role", widget: "string", required: false, hint: "例: 会長 / 副会長 / 理事" }
       - { label: "ご所属企業名", name: "company", widget: "string", required: false }
       - { label: "卒業年度", name: "graduationYear", widget: "string", required: false, hint: "例: 1985年卒" }
-      - { label: "お顔写真", name: "photo", widget: "image", required: false }
+      - { label: "お顔写真", name: "photo", widget: "image", required: false, hint: "写真を登録すると「写真あり」として上段(4名まで目立つ表示)に、未登録の場合は下段(写真なし一覧)に表示されます。写真ありメンバーは4名を目安にすることをおすすめします。" }
       - { label: "企業WebサイトURL", name: "companyUrl", widget: "string", required: false, hint: "https:// から入力" }

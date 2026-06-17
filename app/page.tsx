@@ -297,54 +297,104 @@ export default async function Home() {
                   各界で活躍する会員が、母校への思いと経営への志を共有しています。
                 </p>
               </div>
-              <ul className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
-                {members.map((member) => (
-                  <li key={member.slug}>
-                    <div className="flex flex-col border border-black/10 bg-white transition hover:shadow-md">
-                      {member.photo && (
-                        <div className="aspect-square w-full overflow-hidden">
-                          <img
-                            src={member.photo}
-                            alt={`${member.name} 写真`}
-                            className="h-full w-full object-cover"
-                          />
-                        </div>
-                      )}
-                      <div className="flex flex-col gap-1 p-4">
-                        {member.role && (
-                          <p className="text-xs tracking-widest text-accent">
-                            {member.role}
-                          </p>
-                        )}
-                        <p className="font-serif text-base font-medium text-foreground">
-                          {member.name}
-                        </p>
-                        {member.company && (
-                          <p className="mt-1 text-xs text-foreground/60">
-                            {member.companyUrl ? (
-                              <a
-                                href={member.companyUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label={`${member.company}（外部リンク）`}
-                                className={`transition-colors hover:text-accent ${focusRing}`}
-                              >
-                                {member.company}
-                                <span aria-hidden="true" className="ml-1 text-accent/60">↗</span>
-                              </a>
-                            ) : (
-                              member.company
-                            )}
-                          </p>
-                        )}
-                        {member.graduationYear && (
-                          <p className="text-xs text-foreground/40">{member.graduationYear}</p>
-                        )}
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+              {(() => {
+                const membersWithPhoto = members.filter((m) => m.photo && m.photo.trim() !== "");
+                const membersWithoutPhoto = members.filter((m) => !m.photo || m.photo.trim() === "");
+                return (
+                  <>
+                    {/* 上段: 写真ありメンバー */}
+                    {membersWithPhoto.length > 0 && (
+                      <ul className="grid grid-cols-2 items-stretch gap-4 md:grid-cols-4">
+                        {membersWithPhoto.map((member) => (
+                          <li key={member.slug} className="flex">
+                            <div className="flex h-full w-full flex-col border border-black/10 bg-white transition hover:shadow-md">
+                              <div className="aspect-square w-full overflow-hidden">
+                                <img
+                                  src={member.photo}
+                                  alt={`${member.name} 写真`}
+                                  className="h-full w-full object-cover"
+                                />
+                              </div>
+                              <div className="flex flex-col gap-1 p-4">
+                                {member.role && (
+                                  <p className="text-xs tracking-widest text-accent">
+                                    {member.role}
+                                  </p>
+                                )}
+                                <p className="font-serif text-base font-medium text-foreground">
+                                  {member.name}
+                                </p>
+                                {member.company && (
+                                  <p className="mt-1 text-xs text-foreground/60">
+                                    {member.companyUrl ? (
+                                      <a
+                                        href={member.companyUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        aria-label={`${member.company}（外部リンク）`}
+                                        className={`transition-colors hover:text-accent ${focusRing}`}
+                                      >
+                                        {member.company}
+                                        <span aria-hidden="true" className="ml-1 text-accent/60">↗</span>
+                                      </a>
+                                    ) : (
+                                      member.company
+                                    )}
+                                  </p>
+                                )}
+                                {member.graduationYear && (
+                                  <p className="text-xs text-foreground/40">{member.graduationYear}</p>
+                                )}
+                              </div>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {/* 下段: 写真なしメンバー */}
+                    {membersWithoutPhoto.length > 0 && (
+                      <ul className={`grid grid-cols-2 items-stretch gap-3 sm:grid-cols-3 md:grid-cols-6 ${membersWithPhoto.length > 0 ? "mt-12" : ""}`}>
+                        {membersWithoutPhoto.map((member) => (
+                          <li key={member.slug} className="flex">
+                            <div className="flex h-full w-full flex-col border border-black/10 bg-white p-3 transition hover:shadow-md">
+                              {member.role && (
+                                <p className="text-xs tracking-widest text-accent">
+                                  {member.role}
+                                </p>
+                              )}
+                              <p className="mt-0.5 font-serif text-sm font-medium text-foreground">
+                                {member.name}
+                              </p>
+                              {member.company && (
+                                <p className="mt-1 text-xs text-foreground/60">
+                                  {member.companyUrl ? (
+                                    <a
+                                      href={member.companyUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      aria-label={`${member.company}（外部リンク）`}
+                                      className={`transition-colors hover:text-accent ${focusRing}`}
+                                    >
+                                      {member.company}
+                                      <span aria-hidden="true" className="ml-1 text-accent/60">↗</span>
+                                    </a>
+                                  ) : (
+                                    member.company
+                                  )}
+                                </p>
+                              )}
+                              {member.graduationYear && (
+                                <p className="mt-0.5 text-xs text-foreground/40">{member.graduationYear}</p>
+                              )}
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </>
+                );
+              })()}
             </div>
           </section>
 
