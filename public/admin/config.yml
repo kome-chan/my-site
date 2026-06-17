@@ -150,3 +150,7 @@ collections:
       - { label: "卒業年度", name: "graduationYear", widget: "string", required: false, hint: "例: 1985年卒" }
       - { label: "お顔写真", name: "photo", widget: "image", required: false, hint: "写真を登録すると「写真あり」として上段(4名まで目立つ表示)に、未登録の場合は下段(写真なし一覧)に表示されます。写真ありメンバーは4名を目安にすることをおすすめします。" }
       - { label: "企業WebサイトURL", name: "companyUrl", widget: "string", required: false, hint: "https:// から入力" }
+      - { label: "Facebook URL", name: "facebook", widget: "string", required: false, hint: "個人またはお仕事のFacebookページ" }
+      - { label: "X(Twitter) URL", name: "twitter", widget: "string", required: false }
+      - { label: "Instagram URL", name: "instagram", widget: "string", required: false }
+      - { label: "LinkedIn URL", name: "linkedin", widget: "string", required: false }

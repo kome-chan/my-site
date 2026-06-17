@@ -16,6 +16,7 @@ import {
   getActivitiesSettings,
 } from "@/lib/settings";
 import { getMembers } from "@/lib/members";
+import { FacebookIcon, XIcon, InstagramIcon, LinkedInIcon } from "@/components/SnsIcons";
 
 export const revalidate = 60;
 
@@ -305,23 +306,97 @@ export default async function Home() {
                     {/* 上段: 写真ありメンバー */}
                     {membersWithPhoto.length > 0 && (
                       <ul className="grid grid-cols-2 items-stretch gap-4 md:grid-cols-4">
-                        {membersWithPhoto.map((member) => (
-                          <li key={member.slug} className="flex">
-                            <div className="flex h-full w-full flex-col border border-black/10 bg-white transition hover:shadow-md">
-                              <div className="aspect-square w-full overflow-hidden">
-                                <img
-                                  src={member.photo}
-                                  alt={`${member.name} 写真`}
-                                  className="h-full w-full object-cover"
-                                />
+                        {membersWithPhoto.map((member) => {
+                          const sns = [
+                            { href: member.facebook, Icon: FacebookIcon, label: `${member.name}のFacebook（外部リンク）` },
+                            { href: member.twitter, Icon: XIcon, label: `${member.name}のX / Twitter（外部リンク）` },
+                            { href: member.instagram, Icon: InstagramIcon, label: `${member.name}のInstagram（外部リンク）` },
+                            { href: member.linkedin, Icon: LinkedInIcon, label: `${member.name}のLinkedIn（外部リンク）` },
+                          ].filter((s) => s.href && s.href.trim() !== "");
+                          return (
+                            <li key={member.slug} className="flex">
+                              <div className="flex h-full w-full flex-col border border-black/10 bg-white transition hover:shadow-md">
+                                <div className="aspect-square w-full overflow-hidden">
+                                  <img
+                                    src={member.photo}
+                                    alt={`${member.name} 写真`}
+                                    className="h-full w-full object-cover"
+                                  />
+                                </div>
+                                <div className="flex flex-col gap-1 p-4">
+                                  {member.role && (
+                                    <p className="text-xs tracking-widest text-[#B8860B]">
+                                      {member.role}
+                                    </p>
+                                  )}
+                                  <p className="font-serif text-base font-medium text-foreground">
+                                    {member.name}
+                                  </p>
+                                  {member.company && (
+                                    <p className="mt-1 text-xs text-foreground/60">
+                                      {member.companyUrl ? (
+                                        <a
+                                          href={member.companyUrl}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          aria-label={`${member.company}（外部リンク）`}
+                                          className={`transition-colors hover:text-accent ${focusRing}`}
+                                        >
+                                          {member.company}
+                                          <span aria-hidden="true" className="ml-1 text-accent/60">↗</span>
+                                        </a>
+                                      ) : (
+                                        member.company
+                                      )}
+                                    </p>
+                                  )}
+                                  {member.graduationYear && (
+                                    <p className="text-xs text-foreground/40">{member.graduationYear}</p>
+                                  )}
+                                  {sns.length > 0 && (
+                                    <ul className="mt-2 flex flex-wrap gap-2">
+                                      {sns.map(({ href, Icon, label }) => (
+                                        <li key={label}>
+                                          <a
+                                            href={href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            aria-label={label}
+                                            className={`text-foreground/30 transition-colors hover:text-accent ${focusRing}`}
+                                          >
+                                            <Icon size={16} />
+                                          </a>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  )}
+                                </div>
                               </div>
-                              <div className="flex flex-col gap-1 p-4">
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+
+                    {/* 下段: 写真なしメンバー */}
+                    {membersWithoutPhoto.length > 0 && (
+                      <ul className={`grid grid-cols-2 items-stretch gap-3 sm:grid-cols-3 md:grid-cols-6 ${membersWithPhoto.length > 0 ? "mt-12" : ""}`}>
+                        {membersWithoutPhoto.map((member) => {
+                          const sns = [
+                            { href: member.facebook, Icon: FacebookIcon, label: `${member.name}のFacebook（外部リンク）` },
+                            { href: member.twitter, Icon: XIcon, label: `${member.name}のX / Twitter（外部リンク）` },
+                            { href: member.instagram, Icon: InstagramIcon, label: `${member.name}のInstagram（外部リンク）` },
+                            { href: member.linkedin, Icon: LinkedInIcon, label: `${member.name}のLinkedIn（外部リンク）` },
+                          ].filter((s) => s.href && s.href.trim() !== "");
+                          return (
+                            <li key={member.slug} className="flex">
+                              <div className="flex h-full w-full flex-col border border-black/10 bg-white p-3 transition hover:shadow-md">
                                 {member.role && (
                                   <p className="text-xs tracking-widest text-[#B8860B]">
                                     {member.role}
                                   </p>
                                 )}
-                                <p className="font-serif text-base font-medium text-foreground">
+                                <p className="mt-0.5 font-serif text-sm font-medium text-foreground">
                                   {member.name}
                                 </p>
                                 {member.company && (
@@ -343,53 +418,29 @@ export default async function Home() {
                                   </p>
                                 )}
                                 {member.graduationYear && (
-                                  <p className="text-xs text-foreground/40">{member.graduationYear}</p>
+                                  <p className="mt-0.5 text-xs text-foreground/40">{member.graduationYear}</p>
+                                )}
+                                {sns.length > 0 && (
+                                  <ul className="mt-1.5 flex flex-wrap gap-1.5">
+                                    {sns.map(({ href, Icon, label }) => (
+                                      <li key={label}>
+                                        <a
+                                          href={href}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          aria-label={label}
+                                          className={`text-foreground/30 transition-colors hover:text-accent ${focusRing}`}
+                                        >
+                                          <Icon size={14} />
+                                        </a>
+                                      </li>
+                                    ))}
+                                  </ul>
                                 )}
                               </div>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-
-                    {/* 下段: 写真なしメンバー */}
-                    {membersWithoutPhoto.length > 0 && (
-                      <ul className={`grid grid-cols-2 items-stretch gap-3 sm:grid-cols-3 md:grid-cols-6 ${membersWithPhoto.length > 0 ? "mt-12" : ""}`}>
-                        {membersWithoutPhoto.map((member) => (
-                          <li key={member.slug} className="flex">
-                            <div className="flex h-full w-full flex-col border border-black/10 bg-white p-3 transition hover:shadow-md">
-                              {member.role && (
-                                <p className="text-xs tracking-widest text-accent">
-                                  {member.role}
-                                </p>
-                              )}
-                              <p className="mt-0.5 font-serif text-sm font-medium text-foreground">
-                                {member.name}
-                              </p>
-                              {member.company && (
-                                <p className="mt-1 text-xs text-foreground/60">
-                                  {member.companyUrl ? (
-                                    <a
-                                      href={member.companyUrl}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      aria-label={`${member.company}（外部リンク）`}
-                                      className={`transition-colors hover:text-accent ${focusRing}`}
-                                    >
-                                      {member.company}
-                                      <span aria-hidden="true" className="ml-1 text-accent/60">↗</span>
-                                    </a>
-                                  ) : (
-                                    member.company
-                                  )}
-                                </p>
-                              )}
-                              {member.graduationYear && (
-                                <p className="mt-0.5 text-xs text-foreground/40">{member.graduationYear}</p>
-                              )}
-                            </div>
-                          </li>
-                        ))}
+                            </li>
+                          );
+                        })}
                       </ul>
                     )}
                   </>
