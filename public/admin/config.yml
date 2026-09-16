@@ -18,7 +18,7 @@ collections:
     label: "ヒーロー画像スライダー"
     folder: "content/slider"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{random}}"
+    slug: "{{year}}-{{month}}-{{day}}-{{uuid_short}}"
     fields:
       - { label: "表示順", name: "order", widget: "number", default: 1, min: 1, hint: "数字が小さい順に表示されます" }
       - { label: "画像", name: "image", widget: "image", required: true }
@@ -28,7 +28,7 @@ collections:
     label: "お知らせ"
     folder: "content/news"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{hash}}"
+    slug: "{{year}}-{{month}}-{{day}}-{{uuid_short}}"
     fields:
       - { label: "日付", name: "date", widget: "datetime" }
       - label: "カテゴリ"
@@ -43,7 +43,7 @@ collections:
     label: "今後の予定"
     folder: "content/schedule"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{hash}}"
+    slug: "{{year}}-{{month}}-{{day}}-{{uuid_short}}"
     fields:
       - { label: "日付", name: "date", widget: "datetime" }
       - { label: "イベント名", name: "title", widget: "string" }
@@ -131,10 +131,10 @@ collections:
     folder: "content/members"
     create: true
     reorder: true
-    slug: "{{year}}-{{month}}-{{day}}-{{random}}"
+    slug: "{{year}}-{{month}}-{{day}}-{{uuid_short}}"
     identifier_field: name
     summary: "{{fields.order}}. {{fields.name}} - {{fields.role}}"
-    thumbnail: "{{fields.photo}}"
+    thumbnail: photo
     sortable_fields:
       - order
       - name
