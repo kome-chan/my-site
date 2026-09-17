@@ -115,9 +115,9 @@ export async function getHistorySettings(): Promise<HistorySettings> {
 export async function getActivitiesSettings(): Promise<ActivitiesSettings> {
   return loadYml<ActivitiesSettings>("activities.yml", {
     items: [
-      { title: "講義", subtitle: "LECTURE", description: "各分野の専門家を招いた定例講演会を開催します。" },
-      { title: "交流", subtitle: "NETWORKING", description: "会員相互の懇親会や交流イベントを通じ、ネットワークを形成します。" },
-      { title: "成長", subtitle: "GROWTH", description: "次世代経営者の育成に貢献します。" },
+      { title: "交流", subtitle: "NETWORK", description: "起業家・大企業経営者が集うネットワークを通じ、出会いを生み出します。" },
+      { title: "成長", subtitle: "GROWTH", description: "先輩起業家によるメンターサポートや勉強会を通じ、成長を後押しします。" },
+      { title: "支援", subtitle: "SUPPORT", description: "応援ファンドやメンバー企業優待を通じ、事業の実務的なバックアップを行います。" },
     ],
   });
 }
